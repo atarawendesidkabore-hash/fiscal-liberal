@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+fiscal.db
+fiscal.db-shm
+fiscal.db-wal
+.pytest_cache/
+*.egg-info/
+dist/
+build/
