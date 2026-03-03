@@ -1,4 +1,8 @@
-from datetime import date, datetime
+from datetime import date, datetime, timezone
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
 
 from sqlalchemy import (
     Column, Integer, String, Float, Date, DateTime, Text, ForeignKey, Enum
@@ -18,7 +22,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False, index=True)
     hashed_password = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     companies = relationship("Company", back_populates="owner")
     audit_logs = relationship("AuditLog", back_populates="user")
@@ -43,7 +47,7 @@ class Company(Base):
     adresse = Column(Text)
     capital_social = Column(Float, default=0.0)
     date_creation = Column(Date)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     owner = relationship("User", back_populates="companies")
     exercices = relationship("Exercice", back_populates="company", cascade="all, delete-orphan")
@@ -64,7 +68,7 @@ class Exercice(Base):
         Enum("brouillon", "valide", "depose", name="statut_exercice_enum"),
         default="brouillon",
     )
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     company = relationship("Company", back_populates="exercices")
     form_2058a = relationship("Form2058A", back_populates="exercice", uselist=False, cascade="all, delete-orphan")
@@ -113,7 +117,7 @@ class Form2058A(Base):
 
     # Méta
     notes = Column(Text, default="")
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     exercice = relationship("Exercice", back_populates="form_2058a")
 
@@ -126,7 +130,7 @@ class Form2058B(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     exercice_id = Column(Integer, ForeignKey("exercices.id"), unique=True, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     exercice = relationship("Exercice", back_populates="form_2058b")
     items = relationship("Form2058BItem", back_populates="form_2058b", cascade="all, delete-orphan")
@@ -162,7 +166,7 @@ class Form2058C(Base):
     autres_reserves = Column(Float, default=0.0)
     report_a_nouveau_nouveau = Column(Float, default=0.0)
 
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     exercice = relationship("Exercice", back_populates="form_2058c")
 
@@ -180,7 +184,7 @@ class AuditLog(Base):
     field_changed = Column(String(100))
     old_value = Column(String(255))
     new_value = Column(String(255))
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=_utcnow)
     ip_address = Column(String(45))
 
     user = relationship("User", back_populates="audit_logs")
