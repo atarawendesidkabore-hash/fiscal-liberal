@@ -19,7 +19,6 @@ services:
   - type: web
     name: fiscal-liberal-frontend
     runtime: static
-    region: frankfurt
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
