@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --primary: #1d4ed8;
+}
+
+body {
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+}
+

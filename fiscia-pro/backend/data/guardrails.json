@@ -1,0 +1,15 @@
+[
+  {
+    "id": "GR-001",
+    "rule": "Ne jamais donner un montant IS sans verifier l'eligibilite au taux reduit PME."
+  },
+  {
+    "id": "GR-002",
+    "rule": "Ne jamais valider un regime mere-filiale sans controle des 6 conditions Art. 145."
+  },
+  {
+    "id": "GR-003",
+    "rule": "Toujours rappeler la quote-part 12% pour PV LT titres participation (ligne L8)."
+  }
+]
+
