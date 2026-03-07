@@ -123,7 +123,7 @@ export default function EquipePage() {
           <div className="md:col-span-4">
             <Button type="button" onClick={addMember} disabled={!canInvite}>
               <UserPlus className="mr-2 h-4 w-4" />
-              Ajouter a l'equipe
+              Ajouter a l equipe
             </Button>
           </div>
         </CardContent>
@@ -191,7 +191,7 @@ export default function EquipePage() {
       <ConfirmDialog
         open={Boolean(pendingRemoval)}
         title="Retirer ce collaborateur ?"
-        description={pendingRemoval ? `${pendingRemoval.name} perdra l'acces au dossier cabinet.` : ""}
+        description={pendingRemoval ? `${pendingRemoval.name} perdra l acces au dossier cabinet.` : ""}
         confirmLabel="Retirer"
         onCancel={() => setPendingRemoval(null)}
         onConfirm={removeMember}

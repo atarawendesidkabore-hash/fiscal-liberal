@@ -63,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setLoading(false);
       }
     },
-    [router]
+    [refresh, router]
   );
 
   const logout = React.useCallback(

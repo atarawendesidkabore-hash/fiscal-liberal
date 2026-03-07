@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useState } from "react";
+import useSWR from "swr";
 
 import CalculationCard from "@/components/calculs/CalculationCard";
 import { Button } from "@/components/ui/button";
@@ -14,27 +15,29 @@ import type { CalculationPreview } from "@/lib/types";
 const PAGE_SIZE = 4;
 
 export default function CalculsPage() {
-  const [items, setItems] = useState<CalculationPreview[]>([]);
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [regime, setRegime] = useState("all");
   const [sortBy, setSortBy] = useState("recent");
   const [page, setPage] = useState(1);
   const { push } = useToast();
 
+  const {
+    data: items = [],
+    isLoading: loading,
+    error
+  } = useSWR<CalculationPreview[]>("calculations:list", () => api.listCalculations(), {
+    keepPreviousData: true
+  });
+
   useEffect(() => {
-    const load = async () => {
-      try {
-        const rows = await api.listCalculations();
-        setItems(rows);
-      } catch (error) {
-        push({ title: "Erreur chargement", description: error instanceof Error ? error.message : "Impossible de charger", variant: "error" });
-      } finally {
-        setLoading(false);
-      }
-    };
-    void load();
-  }, [push]);
+    if (error) {
+      push({
+        title: "Erreur chargement",
+        description: error instanceof Error ? error.message : "Impossible de charger",
+        variant: "error"
+      });
+    }
+  }, [error, push]);
 
   const filtered = useMemo(() => {
     const normalized = query.toLowerCase().trim();
@@ -101,9 +104,7 @@ export default function CalculsPage() {
               paginated.map((item) => <CalculationCard key={item.id} item={item} />)
             ) : (
               <Card className="md:col-span-2">
-                <CardContent className="p-6 text-sm text-muted-foreground">
-                  Aucun calcul ne correspond aux filtres selectionnes.
-                </CardContent>
+                <CardContent className="p-6 text-sm text-muted-foreground">Aucun calcul ne correspond aux filtres selectionnes.</CardContent>
               </Card>
             )}
           </div>

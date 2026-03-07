@@ -2,6 +2,7 @@
 
 import { CreditCard, Landmark, Smartphone } from "lucide-react";
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import ConfirmDialog from "@/components/ui/confirm-dialog";
 import UsageMeter from "@/components/facturation/UsageMeter";
@@ -11,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/lib/toast";
 import { api } from "@/lib/api";
-import type { BillingPlan, InvoiceEvent, UsageSummary } from "@/lib/types";
 
 const paymentMethods = [
   {
@@ -32,36 +32,36 @@ const paymentMethods = [
 ];
 
 export default function FacturationPage() {
-  const [plans, setPlans] = useState<BillingPlan[]>([]);
-  const [usage, setUsage] = useState<UsageSummary | null>(null);
-  const [invoices, setInvoices] = useState<InvoiceEvent[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [openCancel, setOpenCancel] = useState(false);
   const { push } = useToast();
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [plansResponse, usageResponse, invoicesResponse] = await Promise.all([
-          api.billingPlans(),
-          api.billingUsage(),
-          api.billingInvoices()
-        ]);
-        setPlans(plansResponse.plans);
-        setUsage(usageResponse.usage);
-        setInvoices(invoicesResponse.invoices);
-      } catch (err) {
-        const message = err instanceof Error ? err.message : "Erreur facturation";
-        setError(message);
-        push({ title: "Facturation indisponible", description: message, variant: "error" });
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: plansData, isLoading: loadingPlans, error: plansError } = useSWR("billing:plans", () => api.billingPlans(), {
+    keepPreviousData: true
+  });
+  const { data: usageData, isLoading: loadingUsage, error: usageError, mutate: mutateUsage } = useSWR(
+    "billing:usage",
+    () => api.billingUsage(),
+    {
+      keepPreviousData: true
+    }
+  );
+  const { data: invoicesData, isLoading: loadingInvoices, error: invoicesError } = useSWR(
+    "billing:invoices",
+    () => api.billingInvoices(),
+    {
+      keepPreviousData: true
+    }
+  );
 
-    void load();
-  }, [push]);
+  useEffect(() => {
+    const firstError = plansError ?? usageError ?? invoicesError;
+    if (firstError) {
+      const message = firstError instanceof Error ? firstError.message : "Erreur facturation";
+      setError(message);
+      push({ title: "Facturation indisponible", description: message, variant: "error" });
+    }
+  }, [plansError, usageError, invoicesError, push]);
 
   const subscribe = async (planName: string) => {
     try {
@@ -82,6 +82,7 @@ export default function FacturationPage() {
   const cancelSubscription = async () => {
     try {
       await api.billingCancel(true);
+      await mutateUsage();
       push({ title: "Resiliation planifiee", description: "La resiliation prendra effet en fin de periode.", variant: "success" });
     } catch (err) {
       push({ title: "Resiliation impossible", description: err instanceof Error ? err.message : "Erreur inconnue", variant: "error" });
@@ -89,6 +90,11 @@ export default function FacturationPage() {
       setOpenCancel(false);
     }
   };
+
+  const plans = plansData?.plans ?? [];
+  const usage = usageData?.usage ?? null;
+  const invoices = invoicesData?.invoices ?? [];
+  const loading = loadingPlans || loadingUsage || loadingInvoices;
 
   return (
     <section className="space-y-5">

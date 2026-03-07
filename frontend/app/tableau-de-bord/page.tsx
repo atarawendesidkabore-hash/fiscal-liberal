@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,26 +9,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import type { CalculationPreview, UsageSummary } from "@/lib/types";
+import type { CalculationPreview } from "@/lib/types";
 
 export default function TableauDeBordPage() {
   const { user, loading: authLoading } = useAuth();
-  const [usage, setUsage] = useState<UsageSummary | null>(null);
-  const [recent, setRecent] = useState<CalculationPreview[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [usageData, calculations] = await Promise.all([api.billingUsage(), api.listCalculations()]);
-        setUsage(usageData.usage);
-        setRecent(calculations.slice(0, 3));
-      } finally {
-        setLoading(false);
-      }
-    };
-    void load();
-  }, []);
+  const { data: usageData, isLoading: usageLoading } = useSWR("dashboard:usage", () => api.billingUsage(), {
+    keepPreviousData: true
+  });
+  const { data: calculations, isLoading: calculationsLoading } = useSWR<CalculationPreview[]>(
+    "dashboard:calculations",
+    () => api.listCalculations(),
+    { keepPreviousData: true }
+  );
+
+  const recent = (calculations ?? []).slice(0, 3);
+  const loading = usageLoading || calculationsLoading;
 
   return (
     <section className="space-y-5">
@@ -68,7 +64,9 @@ export default function TableauDeBordPage() {
         <Card>
           <CardContent className="p-5">
             <p className="text-sm text-muted-foreground">Credits utilises</p>
-            <p className="mt-2 text-3xl font-extrabold tabular-nums">{loading ? "..." : usage?.credits_used ?? 0}</p>
+            <p className="mt-2 text-3xl font-extrabold tabular-nums">
+              {loading ? "..." : usageData?.usage.credits_used ?? 0}
+            </p>
           </CardContent>
         </Card>
 

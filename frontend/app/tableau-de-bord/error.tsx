@@ -20,7 +20,7 @@ export default function DashboardError({ error, reset }: ErrorProps) {
       <Card>
         <CardHeader>
           <CardTitle>Erreur du tableau de bord</CardTitle>
-          <CardDescription>La vue demandee n'a pas pu etre chargee.</CardDescription>
+          <CardDescription>La vue demandee n&apos;a pas pu etre chargee.</CardDescription>
         </CardHeader>
         <CardContent className="flex gap-2">
           <Button type="button" onClick={reset}>

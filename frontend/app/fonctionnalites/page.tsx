@@ -1,5 +1,9 @@
-﻿import { Badge } from "@/components/ui/badge";
+﻿import Image from "next/image";
+
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+export const revalidate = 3600;
 
 const features = [
   {
@@ -36,6 +40,17 @@ export default function FonctionnalitesPage() {
           Une interface complete pour les experts-comptables et fiscalistes qui veulent produire plus vite, avec une meilleure fiabilite.
         </p>
       </header>
+
+      <div className="overflow-hidden rounded-xl border bg-card p-2">
+        <Image
+          src="/images/feature-ui.svg"
+          alt="Apercu des ecrans fonctionnalites FiscIA Pro"
+          width={900}
+          height={560}
+          className="h-auto w-full rounded-lg"
+          sizes="(max-width: 1024px) 100vw, 900px"
+        />
+      </div>
 
       <div className="grid gap-5 md:grid-cols-2">
         {features.map((feature) => (

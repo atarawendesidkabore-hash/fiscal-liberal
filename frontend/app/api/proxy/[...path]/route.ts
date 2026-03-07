@@ -12,6 +12,7 @@ type Context = {
 async function forward(request: Request, { params }: Context, method: string) {
   const endpoint = params.path.join("/");
   const accessToken = cookies().get("fiscia_access_token")?.value;
+  const isAuthenticated = Boolean(accessToken);
   const incomingUrl = new URL(request.url);
   const query = incomingUrl.search ? incomingUrl.search : "";
   const url = `${API_BASE_URL}/${endpoint}${query}`;
@@ -27,7 +28,9 @@ async function forward(request: Request, { params }: Context, method: string) {
   const response = await fetch(url, {
     method,
     headers,
-    body: body || undefined
+    body: body || undefined,
+    cache: method === "GET" && !isAuthenticated ? "force-cache" : "no-store",
+    next: method === "GET" && !isAuthenticated ? { revalidate: 60 } : undefined
   });
 
   const payload = await response.text();
@@ -38,7 +41,13 @@ async function forward(request: Request, { params }: Context, method: string) {
     data = { message: payload };
   }
 
-  return NextResponse.json(data, { status: response.status });
+  const proxied = NextResponse.json(data, { status: response.status });
+  if (method === "GET" && !isAuthenticated) {
+    proxied.headers.set("Cache-Control", "public, s-maxage=60, stale-while-revalidate=120");
+  } else {
+    proxied.headers.set("Cache-Control", "private, no-store");
+  }
+  return proxied;
 }
 
 export async function GET(request: Request, context: Context) {

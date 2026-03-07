@@ -69,7 +69,7 @@ export default function ReglagesPage() {
               Activer export automatique des donnees utilisateur
             </label>
             <div className="space-y-2">
-              <Label htmlFor="autoDeleteAuditAfterYears">Retention journaux d'audit (annees)</Label>
+              <Label htmlFor="autoDeleteAuditAfterYears">Retention journaux d&apos;audit (annees)</Label>
               <Input id="autoDeleteAuditAfterYears" type="number" min="1" max="10" {...register("autoDeleteAuditAfterYears")} />
             </div>
           </CardContent>

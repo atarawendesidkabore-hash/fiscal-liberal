@@ -22,10 +22,10 @@ export default function GlobalError({ error, reset }: ErrorProps) {
           <Card>
             <CardHeader>
               <CardTitle>Une erreur est survenue</CardTitle>
-              <CardDescription>Impossible d'afficher cette page pour le moment.</CardDescription>
+              <CardDescription>Impossible d&apos;afficher cette page pour le moment.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">Vous pouvez reessayer ou revenir a l'accueil.</p>
+              <p className="text-sm text-muted-foreground">Vous pouvez reessayer ou revenir a l&apos;accueil.</p>
               <div className="flex gap-2">
                 <Button type="button" onClick={reset}>
                   Reessayer
