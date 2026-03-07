@@ -7,7 +7,7 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} FiscIA Pro. Solution IA pour fiscalistes francais.</p>
         <div className="flex flex-wrap gap-4">
           <Link href="/fonctionnalites">Fonctionnalites</Link>
-          <Link href="/tarifs">Tarifs</Link>
+          <Link href="/tarification">Tarification</Link>
           <Link href="/demo">Demo</Link>
           <a href="mailto:support@fiscia.pro">Support</a>
         </div>

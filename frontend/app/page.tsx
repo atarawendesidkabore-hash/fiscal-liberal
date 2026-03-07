@@ -43,6 +43,12 @@ export default function HomePage() {
             <Link href="/demo">Voir la demo</Link>
           </Button>
         </div>
+        <div className="mt-6 flex flex-wrap gap-2 text-xs">
+          <Badge variant="secondary" className="bg-white/20 text-white">RGPD ready</Badge>
+          <Badge variant="secondary" className="bg-white/20 text-white">IS Art.219</Badge>
+          <Badge variant="secondary" className="bg-white/20 text-white">2058-A guidee</Badge>
+          <Badge variant="secondary" className="bg-white/20 text-white">Support fiscal FR</Badge>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -66,7 +72,25 @@ export default function HomePage() {
           </Card>
         ))}
       </div>
+
+      <Card>
+        <CardContent className="grid gap-4 p-6 md:grid-cols-4">
+          <TrustItem label="Disponibilite" value="24h/24" />
+          <TrustItem label="Cabinets cibles" value="1 a 20 associes" />
+          <TrustItem label="Latence moyenne" value="< 3 secondes" />
+          <TrustItem label="Mode confidentiel" value="Donnees locales" />
+        </CardContent>
+      </Card>
     </section>
+  );
+}
+
+function TrustItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="mt-1 text-lg font-semibold">{value}</p>
+    </div>
   );
 }
 

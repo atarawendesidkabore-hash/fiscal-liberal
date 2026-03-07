@@ -8,7 +8,7 @@ const links = [
   { href: "/tableau-de-bord", label: "Accueil" },
   { href: "/tableau-de-bord/calculs", label: "Calculs" },
   { href: "/tableau-de-bord/liasse", label: "Liasse 2058-A" },
-  { href: "/tableau-de-bord/fiscaliste", label: "Assistant IA" },
+  { href: "/tableau-de-bord/assistant", label: "Assistant IA" },
   { href: "/tableau-de-bord/facturation", label: "Facturation" },
   { href: "/tableau-de-bord/equipe", label: "Equipe" },
   { href: "/tableau-de-bord/reglages", label: "Reglages" }

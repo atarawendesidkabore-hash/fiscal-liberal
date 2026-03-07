@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -10,13 +12,14 @@ import { useAuth } from "@/lib/auth";
 
 const navLinks = [
   { href: "/fonctionnalites", label: "Fonctionnalites" },
-  { href: "/tarifs", label: "Tarifs" },
+  { href: "/tarification", label: "Tarification" },
   { href: "/demo", label: "Demo" }
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const { user, logout, loading } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
@@ -25,7 +28,7 @@ export default function Header() {
           <Link href="/" className="text-lg font-extrabold tracking-tight text-fiscia-900 dark:text-blue-200">
             FiscIA Pro
           </Link>
-          <nav className="hidden items-center gap-5 md:flex">
+          <nav aria-label="Navigation principale" className="hidden items-center gap-5 md:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -41,7 +44,7 @@ export default function Header() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
           {user ? (
             <>
@@ -63,8 +66,63 @@ export default function Header() {
             </>
           )}
         </div>
+
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            onClick={() => setMobileOpen((open) => !open)}
+          >
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
+
+      {mobileOpen ? (
+        <div id="mobile-nav" className="border-t bg-background md:hidden">
+          <div className="container-page space-y-3 py-4">
+            <nav aria-label="Navigation mobile" className="flex flex-col gap-2">
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href} className="rounded-md px-3 py-2 text-sm hover:bg-muted" onClick={() => setMobileOpen(false)}>
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+            <div className="flex flex-col gap-2">
+              {user ? (
+                <>
+                  <Button asChild variant="secondary" onClick={() => setMobileOpen(false)}>
+                    <Link href="/tableau-de-bord">Tableau de bord</Link>
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setMobileOpen(false);
+                      void logout();
+                    }}
+                    disabled={loading}
+                  >
+                    Deconnexion
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button asChild variant="outline" onClick={() => setMobileOpen(false)}>
+                    <Link href="/auth/connexion">Connexion</Link>
+                  </Button>
+                  <Button asChild onClick={() => setMobileOpen(false)}>
+                    <Link href="/auth/inscription">Essai gratuit</Link>
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }
-

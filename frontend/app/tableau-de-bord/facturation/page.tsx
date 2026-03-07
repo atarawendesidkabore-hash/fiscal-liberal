@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import UsageDisplay from "@/components/facturation/UsageDisplay";
+import UsageMeter from "@/components/facturation/UsageMeter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,7 +59,7 @@ export default function FacturationPage() {
 
       {error ? <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p> : null}
 
-      {loading || !usage ? <Skeleton className="h-44" /> : <UsageDisplay usage={usage} />}
+      {loading || !usage ? <Skeleton className="h-44" /> : <UsageMeter usage={usage} />}
 
       <div className="grid gap-4 md:grid-cols-3">
         {plans.map((plan) => (

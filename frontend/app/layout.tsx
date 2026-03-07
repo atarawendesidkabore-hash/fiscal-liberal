@@ -21,9 +21,17 @@ export default function RootLayout({
     <html lang="fr">
       <body>
         <Providers>
+          <a
+            href="#contenu-principal"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2 focus:text-sm"
+          >
+            Aller au contenu principal
+          </a>
           <div className="min-h-screen bg-gradient-to-b from-blue-50/80 via-background to-background dark:from-slate-950 dark:via-background dark:to-background">
             <Header />
-            <main className="container-page py-8 md:py-10">{children}</main>
+            <main id="contenu-principal" className="container-page py-8 md:py-10">
+              {children}
+            </main>
             <Footer />
           </div>
         </Providers>
