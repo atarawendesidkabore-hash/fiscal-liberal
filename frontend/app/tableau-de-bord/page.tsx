@@ -1,5 +1,6 @@
-"use client";
+﻿"use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,18 +9,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
-import type { UsageSummary } from "@/lib/types";
+import type { CalculationPreview, UsageSummary } from "@/lib/types";
 
 export default function TableauDeBordPage() {
   const { user, loading: authLoading } = useAuth();
   const [usage, setUsage] = useState<UsageSummary | null>(null);
+  const [recent, setRecent] = useState<CalculationPreview[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await api.billingUsage();
-        setUsage(data.usage);
+        const [usageData, calculations] = await Promise.all([api.billingUsage(), api.listCalculations()]);
+        setUsage(usageData.usage);
+        setRecent(calculations.slice(0, 3));
       } finally {
         setLoading(false);
       }
@@ -65,9 +68,7 @@ export default function TableauDeBordPage() {
         <Card>
           <CardContent className="p-5">
             <p className="text-sm text-muted-foreground">Credits utilises</p>
-            <p className="mt-2 text-3xl font-extrabold tabular-nums">
-              {loading ? "..." : usage?.credits_used ?? 0}
-            </p>
+            <p className="mt-2 text-3xl font-extrabold tabular-nums">{loading ? "..." : usage?.credits_used ?? 0}</p>
           </CardContent>
         </Card>
 
@@ -76,15 +77,46 @@ export default function TableauDeBordPage() {
             <p className="text-sm text-muted-foreground">Actions rapides</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <Button asChild size="sm">
-                <a href="/tableau-de-bord/liasse">Nouvelle liasse</a>
+                <Link href="/tableau-de-bord/liasse">Nouvelle liasse</Link>
               </Button>
               <Button asChild variant="outline" size="sm">
-                <a href="/tableau-de-bord/calculs">Historique</a>
+                <Link href="/tableau-de-bord/calculs">Historique</Link>
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Activite recente</CardTitle>
+          <CardDescription>Derniers calculs enregistres.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {loading ? (
+            <>
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+              <Skeleton className="h-10" />
+            </>
+          ) : recent.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Aucun calcul recent.</p>
+          ) : (
+            recent.map((item) => (
+              <div key={item.id} className="flex items-center justify-between rounded-md border bg-muted/30 px-3 py-2">
+                <div>
+                  <p className="text-sm font-medium">SIREN {item.siren}</p>
+                  <p className="text-xs text-muted-foreground">{item.created_at}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-semibold tabular-nums">{item.is_total.toLocaleString("fr-FR")} EUR</p>
+                  <p className="text-xs text-muted-foreground">{item.regime}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
     </section>
   );
 }
@@ -97,4 +129,3 @@ function Info({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
-

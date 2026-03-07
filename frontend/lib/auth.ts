@@ -50,7 +50,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setError(null);
       try {
         const data = await api.login(email, password);
-        setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          await refresh();
+        }
         router.push("/tableau-de-bord");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Connexion impossible.");

@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   AuthResponse,
   BillingPlan,
   CalculationDetail,
@@ -13,7 +13,33 @@ import type {
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-async function request<T>(path: string, method: HttpMethod, body?: unknown): Promise<T> {
+let refreshPromise: Promise<boolean> | null = null;
+
+async function refreshAccessToken(): Promise<boolean> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        const response = await fetch("/api/auth/refresh", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({})
+        });
+        return response.ok;
+      } catch {
+        return false;
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+async function request<T>(path: string, method: HttpMethod, body?: unknown, retryOn401 = true): Promise<T> {
   const response = await fetch(path, {
     method,
     credentials: "include",
@@ -22,6 +48,20 @@ async function request<T>(path: string, method: HttpMethod, body?: unknown): Pro
     },
     body: body ? JSON.stringify(body) : undefined
   });
+
+  const canRetryWithRefresh =
+    retryOn401 &&
+    path !== "/api/auth/refresh" &&
+    path !== "/api/auth/login" &&
+    path !== "/api/auth/register" &&
+    path !== "/api/auth/logout";
+
+  if (response.status === 401 && canRetryWithRefresh) {
+    const refreshed = await refreshAccessToken();
+    if (refreshed) {
+      return request<T>(path, method, body, false);
+    }
+  }
 
   if (!response.ok) {
     const payload = await response.json().catch(() => ({}));
@@ -32,8 +72,7 @@ async function request<T>(path: string, method: HttpMethod, body?: unknown): Pro
 }
 
 export const api = {
-  login: (email: string, password: string) =>
-    request<AuthResponse>("/api/auth/login", "POST", { email, password }),
+  login: (email: string, password: string) => request<AuthResponse>("/api/auth/login", "POST", { email, password }),
 
   register: (firm_name: string, email: string, password: string, plan_type = "starter") =>
     request<AuthResponse>("/api/auth/register", "POST", { firm_name, email, password, plan_type }),
@@ -43,7 +82,10 @@ export const api = {
   me: () => request<UserProfile>("/api/auth/me", "GET"),
 
   searchCgi: (query: string) =>
-    request<{ results: Array<{ article: string; title: string; excerpt: string }> }>("/api/proxy/search", "POST", {
+    request<{
+      results: Array<{ article: string; title: string; excerpt: string; version?: string; score?: number }>;
+      disclaimer?: string;
+    }>("/api/proxy/search", "POST", {
       query
     }),
 
@@ -76,12 +118,11 @@ export const api = {
       wallets_enabled: string[];
     }>("/api/proxy/billing/subscribe", "POST", { plan_name, success_url, cancel_url }),
 
-  billingCancel: (at_period_end = true) => request("/api/proxy/billing/cancel", "POST", { at_period_end }),
+  billingCancel: (at_period_end = true) => request<{ status: string }>("/api/proxy/billing/cancel", "POST", { at_period_end }),
 
-  billingUpgrade: (plan_name: string) => request("/api/proxy/billing/upgrade", "POST", { plan_name }),
+  billingUpgrade: (plan_name: string) => request<{ status: string }>("/api/proxy/billing/upgrade", "POST", { plan_name }),
 
   listCalculations: async (): Promise<CalculationPreview[]> => {
-    // Placeholder until dedicated list endpoint is exposed.
     return [
       {
         id: "calc-001",
@@ -98,6 +139,22 @@ export const api = {
         is_total: 17500,
         regime: "Taux normal 25%",
         created_at: "2026-03-06 16:30"
+      },
+      {
+        id: "calc-003",
+        siren: "852741963",
+        exercice_clos: "2024-12-31",
+        is_total: 11920,
+        regime: "PME 15%/25%",
+        created_at: "2026-03-05 14:08"
+      },
+      {
+        id: "calc-004",
+        siren: "741852963",
+        exercice_clos: "2024-12-31",
+        is_total: 26380,
+        regime: "Taux normal 25%",
+        created_at: "2026-03-02 10:20"
       }
     ];
   },
@@ -128,4 +185,3 @@ export const api = {
     ];
   }
 };
-

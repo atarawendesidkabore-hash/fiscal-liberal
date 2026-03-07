@@ -12,7 +12,9 @@ type Context = {
 async function forward(request: Request, { params }: Context, method: string) {
   const endpoint = params.path.join("/");
   const accessToken = cookies().get("fiscia_access_token")?.value;
-  const url = `${API_BASE_URL}/${endpoint}`;
+  const incomingUrl = new URL(request.url);
+  const query = incomingUrl.search ? incomingUrl.search : "";
+  const url = `${API_BASE_URL}/${endpoint}${query}`;
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json"

@@ -16,8 +16,11 @@ export interface TokenPair {
 }
 
 export interface AuthResponse {
-  user: UserProfile;
-  tokens: TokenPair;
+  user?: UserProfile;
+  tokens?: TokenPair;
+  access_token?: string;
+  refresh_token?: string;
+  token_type?: string;
 }
 
 export interface BillingPlan {

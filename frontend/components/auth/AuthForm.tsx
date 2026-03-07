@@ -23,11 +23,12 @@ type FormValues = {
   email: string;
   password: string;
   confirmPassword: string;
+  plan: "starter" | "pro" | "cabinet";
 };
 
 export default function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, refresh } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
@@ -37,7 +38,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     watch,
     formState: { errors, isSubmitting }
   } = useForm<FormValues>({
-    defaultValues: { cabinet: "", email: "", password: "", confirmPassword: "" },
+    defaultValues: { cabinet: "", email: "", password: "", confirmPassword: "", plan: "starter" },
     mode: "onChange"
   });
 
@@ -54,7 +55,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
     if (mode === "inscription") {
       try {
-        await api.register(values.cabinet, values.email, values.password, "starter");
+        await api.register(values.cabinet, values.email, values.password, values.plan);
+        await refresh();
         router.push("/tableau-de-bord");
       } catch (err) {
         setError(err instanceof Error ? err.message : "Inscription impossible.");
@@ -87,6 +89,17 @@ export default function AuthForm({ mode }: AuthFormProps) {
               <Label htmlFor="cabinet">Nom du cabinet</Label>
               <Input id="cabinet" placeholder="Cabinet Dupont" {...register("cabinet", { required: "Nom obligatoire" })} />
               {errors.cabinet ? <p className="text-xs text-red-600">{errors.cabinet.message}</p> : null}
+            </div>
+          ) : null}
+
+          {mode === "inscription" ? (
+            <div className="space-y-2">
+              <Label htmlFor="plan">Plan de depart</Label>
+              <select id="plan" className="h-10 w-full rounded-md border bg-background px-3 text-sm" {...register("plan", { required: true })}>
+                <option value="starter">Starter - 29 EUR/mois</option>
+                <option value="pro">Pro - 79 EUR/mois</option>
+                <option value="cabinet">Cabinet - 199 EUR/mois</option>
+              </select>
             </div>
           ) : null}
 

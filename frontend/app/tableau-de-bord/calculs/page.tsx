@@ -97,9 +97,15 @@ export default function CalculsPage() {
       ) : (
         <>
           <div className="grid gap-4 md:grid-cols-2">
-            {paginated.map((item) => (
-              <CalculationCard key={item.id} item={item} />
-            ))}
+            {paginated.length > 0 ? (
+              paginated.map((item) => <CalculationCard key={item.id} item={item} />)
+            ) : (
+              <Card className="md:col-span-2">
+                <CardContent className="p-6 text-sm text-muted-foreground">
+                  Aucun calcul ne correspond aux filtres selectionnes.
+                </CardContent>
+              </Card>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <Button variant="outline" disabled={page <= 1} onClick={() => setPage((current) => Math.max(current - 1, 1))}>

@@ -17,26 +17,32 @@ export default function CalculDetailPage() {
 
   const [item, setItem] = useState<CalculationDetail | null>(null);
   const [iaExplanation, setIaExplanation] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
-      const found = await api.calculationById(id);
-      setItem(found);
-      if (found) {
-        try {
-          const ai = await api.searchCgi("article 219 taux is pme");
-          const first = ai.results[0];
-          setIaExplanation(
-            first
-              ? `${found.ai_explanation}\n\nReference: ${first.article} - ${first.title}`
-              : found.ai_explanation || ""
-          );
-        } catch {
-          setIaExplanation(found.ai_explanation || "");
+      try {
+        const found = await api.calculationById(id);
+        setItem(found);
+        if (found) {
+          try {
+            const ai = await api.searchCgi("article 219 taux is pme");
+            const first = ai.results[0];
+            setIaExplanation(
+              first
+                ? `${found.ai_explanation}\n\nReference: ${first.article} - ${first.title}`
+                : found.ai_explanation || ""
+            );
+          } catch {
+            setIaExplanation(found.ai_explanation || "");
+          }
         }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur de chargement du calcul.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     void load();
   }, [id]);
@@ -51,7 +57,11 @@ export default function CalculDetailPage() {
   }
 
   if (!item) {
-    return <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">Calcul introuvable.</p>;
+    return (
+      <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+        {error ?? "Calcul introuvable."}
+      </p>
+    );
   }
 
   return (

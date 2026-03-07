@@ -33,6 +33,7 @@ export default function Header() {
               <Link
                 key={link.href}
                 href={link.href}
+                aria-current={pathname === link.href ? "page" : undefined}
                 className={cn(
                   "text-sm text-muted-foreground transition hover:text-foreground",
                   pathname === link.href && "font-semibold text-foreground"
@@ -87,7 +88,13 @@ export default function Header() {
           <div className="container-page space-y-3 py-4">
             <nav aria-label="Navigation mobile" className="flex flex-col gap-2">
               {navLinks.map((link) => (
-                <Link key={link.href} href={link.href} className="rounded-md px-3 py-2 text-sm hover:bg-muted" onClick={() => setMobileOpen(false)}>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className="rounded-md px-3 py-2 text-sm hover:bg-muted"
+                  onClick={() => setMobileOpen(false)}
+                >
                   {link.label}
                 </Link>
               ))}
