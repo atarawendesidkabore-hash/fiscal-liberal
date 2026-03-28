@@ -1,0 +1,20 @@
+SIREN: 732829320
+Denomination: Cabinet Atlas Fiscal
+Exercice ouvert le: 01/01/2024
+Exercice clos le: 31/12/2024
+Regime d imposition: reel simplifie
+CA HT: 3500000
+Capital social: 50000
+Effectif moyen: 12
+capital_pp: oui
+capital_libere: oui
+Resultat comptable: 245000
+Achats marchandises: 510000
+Charges externes: 265000
+Impots et taxes: 18000
+Salaires: 420000
+Charges sociales: 160000
+Dotations amortissements: 48000
+Reintegrations fiscales: 16300
+Deductions fiscales: 20400
+Deficits anterieurs: 50000

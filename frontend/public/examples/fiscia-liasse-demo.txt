@@ -1,0 +1,13 @@
+SIREN: 732829320
+Exercice clos le: 31/12/2024
+Benefice comptable: 245000
+Perte comptable: 0
+WI: 38000
+WG: 4200
+WM: 12500
+WN: 7600
+WV: 18000
+L8: 2400
+CA HT: 3500000
+capital_pp: oui
+save: oui

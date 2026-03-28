@@ -1,0 +1,17 @@
+{
+  "liasse": {
+    "siren": "732829320",
+    "exercice_clos": "2024-12-31",
+    "benefice_comptable": 245000,
+    "perte_comptable": 0,
+    "wi_is_comptabilise": 38000,
+    "wg_amendes_penalites": 4200,
+    "wm_interets_excedentaires": 12500,
+    "wn_reintegrations_diverses": 7600,
+    "wv_regime_mere_filiale": 18000,
+    "l8_qp_12pct": 2400
+  },
+  "ca": 3500000,
+  "capital_pp": true,
+  "save": true
+}

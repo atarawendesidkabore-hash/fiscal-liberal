@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    typedRoutes: false
-  }
+  turbopack: {
+    root: process.cwd(),
+  },
 };
 
 export default nextConfig;
-
-

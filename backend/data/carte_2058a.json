@@ -1,0 +1,516 @@
+{
+  "version": "3.0",
+  "formulaire": "DGFiP 2058-A",
+  "intitule": "Determination du resultat fiscal - Impot sur les societes",
+  "base_legale": "Art. 53 A CGI",
+  "sections": {
+    "section_0_resultat_comptable": {
+      "label": "Resultat comptable",
+      "lignes": {
+        "WA": {
+          "code": "WA",
+          "intitule": "Benefice comptable de l'exercice",
+          "sens": "BASE",
+          "article_cgi": "Art. 53 A CGI",
+          "description": "Resultat net comptable positif tel qu'il ressort du compte de resultat (compte 120)",
+          "obligatoire": true,
+          "calcul": "Produits - Charges (compte de resultat)",
+          "piege": "Ne pas confondre avec le resultat fiscal. Le RC est le point de depart AVANT retraitements extracomptables."
+        },
+        "WQ": {
+          "code": "WQ",
+          "intitule": "Perte comptable de l'exercice",
+          "sens": "BASE",
+          "article_cgi": "Art. 53 A CGI",
+          "description": "Resultat net comptable negatif (compte 129). Mutuellement exclusif avec WA.",
+          "obligatoire": true,
+          "calcul": "Si resultat < 0, inscrire la valeur absolue ici",
+          "piege": "WA et WQ ne peuvent pas etre remplis simultanement."
+        }
+      }
+    },
+    "section_I_reintegrations": {
+      "label": "Reintegrations - Total I",
+      "total_ligne": "XR",
+      "sens_general": "+",
+      "impact": "Augmente le resultat fiscal",
+      "lignes": {
+        "WB": {
+          "code": "WB",
+          "intitule": "Remuneration du travail de l'exploitant ou des associes (entreprises a l'IR)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 154 bis CGI",
+          "description": "Non applicable aux societes IS de plein droit. Concerne uniquement les entreprises individuelles et societes de personnes a l'IR ayant opte IS.",
+          "obligatoire": false,
+          "condition": "Uniquement si societe de personnes ayant opte IS et si remuneration de l'exploitant deduite en comptabilite",
+          "piege": "Rare en pratique IS. Verifier le regime fiscal de la societe."
+        },
+        "WC": {
+          "code": "WC",
+          "intitule": "Avantages personnels non deductibles",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-5 CGI",
+          "description": "Depenses ayant un caractere personnel et non professionnel supportees par la societe.",
+          "obligatoire": false,
+          "exemples": ["Depenses personnelles du dirigeant payees par la societe", "Voyages sans caractere professionnel", "Frais de reception sans justification professionnelle"],
+          "piege": "Risque de requalification en revenus distribues (Art. 111-c CGI) si montants significatifs."
+        },
+        "WD": {
+          "code": "WD",
+          "intitule": "Amortissements excedentaires (et non deductibles)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-4 CGI + Art. 39-1-2 CGI",
+          "description": "Fraction des amortissements comptabilises excedant les limites fiscales.",
+          "obligatoire": false,
+          "exemples": [
+            "Vehicules tourisme : amortissement limite a 18 300 EUR (ou 9 900 EUR si CO2 > 130g) - Art. 39-4 CGI",
+            "Suramortissement comptable vs fiscal",
+            "Amortissements sur des immobilisations non amortissables fiscalement"
+          ],
+          "calcul": "Amortissement comptabilise - Amortissement fiscalement admis",
+          "piege": "Le plafond vehicule tourisme est de 30 000 EUR pour les vehicules electriques (Art. 39-4-a CGI modifie LFI 2024)."
+        },
+        "WE": {
+          "code": "WE",
+          "intitule": "Charges somptuaires (Art. 39-4 CGI)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-4 CGI",
+          "description": "Depenses considerees somptuaires par le legislateur, non deductibles du resultat fiscal.",
+          "obligatoire": true,
+          "automatique": true,
+          "liste_exhaustive": [
+            "Depenses de chasse et de peche",
+            "Depenses de yachts et bateaux de plaisance",
+            "Residences de plaisance (sauf si affectees a l'hebergement du personnel ou liees a l'activite)",
+            "Depenses relatives a ces biens (entretien, assurance, personnel)"
+          ],
+          "piege": "Exception : residences affectees a l'accueil de la clientele et inscrites a l'actif du bilan. Charge de la preuve sur le contribuable."
+        },
+        "WF": {
+          "code": "WF",
+          "intitule": "Taxe sur les vehicules de societes (TVS)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-1 CGI + Art. 1010 et s. CGI",
+          "description": "La TVS n'est pas deductible du resultat fiscal IS, meme si elle est comptabilisee en charges.",
+          "obligatoire": true,
+          "automatique": true,
+          "calcul": "Montant TVS comptabilise en charge (compte 6354)",
+          "piege": "Depuis 2022 : remplacee par 2 taxes (taxe CO2 + taxe polluants). Meme traitement : non deductible IS."
+        },
+        "WG": {
+          "code": "WG",
+          "intitule": "Amendes et penalites fiscales et sociales",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-2 CGI",
+          "description": "Amendes, penalites de toute nature mises a la charge des contrevenants. Non deductibles du resultat fiscal.",
+          "obligatoire": true,
+          "automatique": true,
+          "exemples": [
+            "Majorations et penalites DGFiP (10%, 40%, 80%)",
+            "Amendes penales (contraventions, delits)",
+            "Penalites URSSAF",
+            "Amendes douanieres",
+            "Amendes Autorite de la concurrence"
+          ],
+          "exception": "Les interets de retard (Art. 1727 CGI) sont deductibles (ce ne sont pas des sanctions mais une indemnisation du Tresor).",
+          "piege": "Les interets de retard 0.20%/mois (Art. 1727 CGI) sont DEDUCTIBLES. Ne pas les confondre avec les majorations (Art. 1728, 1729) qui sont NON deductibles."
+        },
+        "WI": {
+          "code": "WI",
+          "intitule": "Impot sur les societes (IS) comptabilise en charges",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 213 CGI",
+          "description": "L'IS et l'IFA ne sont jamais deductibles du resultat fiscal. Si comptabilises en charge (compte 695), reintegration systematique.",
+          "obligatoire": true,
+          "automatique": true,
+          "toujours": true,
+          "calcul": "Montant IS inscrit au compte 695 + IFA eventuel",
+          "piege": "REGLE ABSOLUE : l'IS n'est JAMAIS une charge deductible. Verification automatique obligatoire a chaque liasse."
+        },
+        "WJ": {
+          "code": "WJ",
+          "intitule": "Plus-values comptabilisees au cours d'exercices anterieurs et imposables au titre de l'exercice",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39 duodecies CGI",
+          "description": "PV a imposition differee qui deviennent imposables a l'exercice (ex: PV en report suite a fusion Art. 210 A).",
+          "obligatoire": false,
+          "piege": "Verifier les engagements de report lies aux operations de restructuration."
+        },
+        "WK": {
+          "code": "WK",
+          "intitule": "Provisions non deductibles (dotations de l'exercice)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-1-5 CGI",
+          "description": "Provisions comptabilisees qui ne respectent pas les conditions de deductibilite fiscale.",
+          "obligatoire": false,
+          "conditions_deductibilite": [
+            "La perte ou charge doit etre nettement precisee",
+            "La perte ou charge doit etre probable (pas simplement eventuelle)",
+            "La perte ou charge doit resulter d'evenements en cours a la cloture",
+            "La perte ou charge doit etre deductible par nature"
+          ],
+          "exemples_non_deductibles": [
+            "Provision pour propre assureur (sauf exception)",
+            "Provision pour investissement (supprimee)",
+            "Provision pour risque dont la probabilite est insuffisante",
+            "Provision pour charges futures non nees a la cloture"
+          ],
+          "piege": "Les provisions pour depreciation de stocks suivent des regles specifiques (Art. 39-1-5 dernier alinea)."
+        },
+        "K7": {
+          "code": "K7",
+          "intitule": "Quote-part dans les pertes de societes de personnes et GIE",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 8 CGI + Art. 239 quater CGI",
+          "description": "QP de pertes de SDP/GIE deja prises en compte au niveau des associes. A reintegrer si comptabilisees en charges.",
+          "obligatoire": false,
+          "piege": "Ne s'applique que si la societe IS est associee d'une societe de personnes (SNC, SCS, SCI non IS)."
+        },
+        "WL": {
+          "code": "WL",
+          "intitule": "Benefices realises par une societe de personnes ou un GIE",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 8 CGI + Art. 238 bis L CGI",
+          "description": "QP de benefices provenant de participations dans des societes de personnes translucides. Imposable au niveau de l'associe IS.",
+          "obligatoire": false,
+          "piege": "Le benefice doit etre declare meme s'il n'est pas distribue (principe de transparence fiscale)."
+        },
+        "WM": {
+          "code": "WM",
+          "intitule": "Interets excedentaires des comptes courants d'associes",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 39-1-3 CGI + Art. 212 CGI",
+          "description": "Fraction des interets verses sur CC associes qui excede le plafond fiscal (TMP des prets aux entreprises publies par la BdF).",
+          "obligatoire": false,
+          "calcul": "Interets verses - (CC x TMP BdF annuel) = excedent a reintegrer",
+          "conditions": [
+            "Capital social doit etre integralement libere",
+            "Taux plafond = TMP prets aux entreprises BdF (trimestriel)",
+            "S'applique aux interets servis aux associes et dirigeants"
+          ],
+          "piege": "Si le capital n'est pas integralement libere, TOUS les interets de CC sont non deductibles (Art. 39-1-3 CGI)."
+        },
+        "WN": {
+          "code": "WN",
+          "intitule": "Reintegrations diverses (dont QP 5% mere-filiale et gains de change latents)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 216 CGI (QP 5%) + Art. 38-4 CGI (gains de change)",
+          "description": "Ligne fourre-tout pour les reintegrations non prevues aux lignes precedentes. Inclut notamment la QP 5% du regime mere-filiale.",
+          "obligatoire": false,
+          "elements_courants": [
+            "Quote-part de frais et charges 5% sur dividendes mère-filiale Art. 216 CGI : (dividende + CI) x 5%",
+            "Gains de change latents non comptabilises en produit",
+            "Jetons de presence excedentaires (Art. 210 sexies CGI)",
+            "Ecarts de conversion actif non provisionnes"
+          ],
+          "piege": "La QP 5% mere-filiale est OBLIGATOIRE des que le regime est applique. Elle se calcule sur le dividende brut + credits d'impot eventuels."
+        },
+        "WO": {
+          "code": "WO",
+          "intitule": "Ecarts de valeur liquidative OPCVM (reintegration)",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 209-0 A CGI",
+          "description": "Ecarts positifs de valeur liquidative sur parts d'OPCVM detenues par la societe.",
+          "obligatoire": false,
+          "piege": "Regime special des OPCVM a preponderance obligataire ou monetaire."
+        },
+        "L7": {
+          "code": "L7",
+          "intitule": "Resultats beneficiaires vises a l'Art. 209 B CGI",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 209 B CGI",
+          "description": "Benefices de filiales etrangeres situees dans des pays a fiscalite privilegiee (taux effectif < 50% du taux francais).",
+          "obligatoire": false,
+          "piege": "Application complexe. Necessite l'analyse du taux effectif d'imposition etranger."
+        },
+        "L8": {
+          "code": "L8",
+          "intitule": "Quote-part 12% PV LT titres de participation au taux 0%",
+          "sens": "+REINTEGRATION",
+          "article_cgi": "Art. 219-I-a quater CGI",
+          "description": "Les PV LT sur titres de participation sont exonerees (taux 0%) MAIS une QP de 12% de la PV brute est reintegree au resultat imposable au taux normal.",
+          "obligatoire": true,
+          "automatique_si": "PV LT titres de participation declaree",
+          "calcul": "PV nette LT titres de participation x 12%",
+          "piege": "REGLE ABSOLUE : chaque fois qu'une PV LT sur titres de participation est exoneree, la QP 12% DOIT etre reintegree. Base de calcul = PV brute, pas nette."
+        },
+        "XR": {
+          "code": "XR",
+          "intitule": "TOTAL I - Total des reintegrations",
+          "sens": "TOTAL",
+          "article_cgi": "Art. 53 A CGI",
+          "description": "Somme de toutes les reintegrations (WA ou -WQ + WB a L8)",
+          "calcul": "WA - WQ + WB + WC + WD + WE + WF + WG + WI + WJ + WK + K7 + WL + WM + WN + WO + L7 + L8",
+          "automatique": true
+        }
+      }
+    },
+    "section_II_deductions": {
+      "label": "Deductions - Total II",
+      "total_ligne": "ZY",
+      "sens_general": "-",
+      "impact": "Diminue le resultat fiscal",
+      "lignes": {
+        "WR": {
+          "code": "WR",
+          "intitule": "Plus-values nettes a long terme imposees au taux de 15%, 8% ou 0%",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 219-I CGI",
+          "description": "PV nettes LT sortant du resultat imposable au taux normal pour etre imposees a un taux reduit.",
+          "taux_applicables": {
+            "0_pct": "Titres de participation (+ QP 12% reintegree en L8)",
+            "8_pct": "Anciens taux residuels (quasi disparu)",
+            "15_pct": "Produits de cession de brevets et assimiles (Art. 39 terdecies CGI)"
+          },
+          "piege": "Les MV LT ne sont imputables que sur les PV LT de meme nature, sur 10 exercices."
+        },
+        "L2": {
+          "code": "L2",
+          "intitule": "PV nette LT imposee au taux de 15%",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 39 terdecies CGI",
+          "description": "Concessions de brevets et licences exclusives. Taux reduit 15% (au lieu de 25%)."
+        },
+        "L3": {
+          "code": "L3",
+          "intitule": "PV nette LT imputee sur MV LT anterieures",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 39 quindecies-I-2 CGI",
+          "description": "Imputation de MV LT anterieures sur PV LT de l'exercice."
+        },
+        "L4": {
+          "code": "L4",
+          "intitule": "PV nette LT imposee au taux de 8%",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 219-I-a CGI (ancien)",
+          "description": "Taux residuel quasi inapplicable. Concerne d'anciens regimes transitoires."
+        },
+        "L5": {
+          "code": "L5",
+          "intitule": "PV nette LT imputee sur deficits anterieurs",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 209-I CGI",
+          "description": "Imputation de deficits ordinaires sur PV LT (optionnel, rarement avantageux)."
+        },
+        "WS": {
+          "code": "WS",
+          "intitule": "PV a court terme dont l'imposition est differee",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 39 quaterdecies CGI",
+          "description": "PV CT pouvant etre etalee sur 3 ans (sinistres, expropriation) ou sur la duree restante de l'amortissement."
+        },
+        "WT": {
+          "code": "WT",
+          "intitule": "PV en sursis ou report d'imposition (fusions Art. 210 A)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 210 A CGI",
+          "description": "PV en sursis d'imposition lors d'operations de restructuration (fusions, apports partiels d'actif, scissions).",
+          "conditions": [
+            "Operation placee sous le regime de faveur Art. 210 A",
+            "Engagements de la societe absorbante respectes (rapport d'echange, conservation des valeurs comptables)"
+          ],
+          "piege": "Le non-respect des engagements entraine la decheance du regime et l'imposition immediate de toutes les PV en sursis."
+        },
+        "WU": {
+          "code": "WU",
+          "intitule": "Ecarts de valeur liquidative OPCVM (deduction)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 209-0 A CGI",
+          "description": "Ecarts negatifs de valeur liquidative sur parts d'OPCVM."
+        },
+        "WV": {
+          "code": "WV",
+          "intitule": "Dividendes regime mere-filiale (deduction)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 145 + Art. 216 CGI",
+          "description": "Dividendes recus de filiales eligibles au regime mere-filiale. Deduction quasi-totale (sauf QP 5% reintegree en WN).",
+          "conditions_cumulatives": [
+            "Participation >= 5% du capital de la filiale",
+            "Titres detenus >= 2 ans ou engagement de conservation",
+            "Titres nominatifs",
+            "Pleine propriete (non demembres)",
+            "Filiale soumise IS",
+            "Filiale hors ETNC"
+          ],
+          "calcul": "Dividende brut recu de la filiale eligible",
+          "contrepartie": "Reintegration WN obligatoire : (dividende + CI) x 5%",
+          "piege": "Si une seule condition n'est pas remplie, le regime est INAPPLICABLE et les dividendes sont 100% imposables au taux normal IS."
+        },
+        "L6": {
+          "code": "L6",
+          "intitule": "Produit net des participations (quote-part de frais et charges restituee)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 216 CGI",
+          "description": "Ligne technique pour integration fiscale ou cas specifiques de restitution de QP."
+        },
+        "WW": {
+          "code": "WW",
+          "intitule": "Zones d'entreprises exonerees",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 44 sexies et s. CGI",
+          "description": "Benefices exoneres dans le cadre de dispositifs zonages (ZFU, ZRR, QPV, BER, etc.)."
+        },
+        "XB": {
+          "code": "XB",
+          "intitule": "Deductions diverses (dont report en arriere du deficit Art. 220 quinquies)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 220 quinquies CGI",
+          "description": "Deductions non prevues aux lignes precedentes. Inclut le carry-back (report en arriere du deficit).",
+          "carry_back": {
+            "montant_max": 1000000,
+            "exercices": "Exercice precedent uniquement (N-1)",
+            "resultat": "Creance sur le Tresor = deficit reporte x taux IS applicable de l'exercice d'imputation"
+          }
+        },
+        "WZ": {
+          "code": "WZ",
+          "intitule": "Majoration temporaire des amortissements",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 39 A bis CGI",
+          "description": "Suramortissement fiscal (ex: suramortissement Macron sur les investissements industriels)."
+        },
+        "XA": {
+          "code": "XA",
+          "intitule": "Investissements outre-mer (deduction)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 217 undecies et duodecies CGI",
+          "description": "Deduction fiscale pour investissements productifs en outre-mer."
+        },
+        "L9": {
+          "code": "L9",
+          "intitule": "Abattements et exonerations (zones, JEI, etc.)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 44 sexies A CGI (JEI) et divers",
+          "description": "Exonerations au titre de dispositifs specifiques : JEI, zones franches, etc."
+        },
+        "ZY": {
+          "code": "ZY",
+          "intitule": "TOTAL II - Total des deductions",
+          "sens": "TOTAL",
+          "article_cgi": "Art. 53 A CGI",
+          "description": "Somme de toutes les deductions",
+          "calcul": "WR + L2 + L3 + L4 + L5 + WS + WT + WU + WV + L6 + WW + XB + WZ + XA + L9",
+          "automatique": true
+        }
+      }
+    },
+    "section_III_regimes_particuliers": {
+      "label": "Regimes particuliers et abattements",
+      "lignes": {
+        "XD": {
+          "code": "XD",
+          "intitule": "Entreprises nouvelles Art. 44 sexies CGI",
+          "article_cgi": "Art. 44 sexies CGI",
+          "description": "Exoneration progressive (100%-75%-50%-25%) sur 5 ans pour entreprises nouvelles en zones eligibles."
+        },
+        "XF": {
+          "code": "XF",
+          "intitule": "Reprise d'entreprises en difficulte Art. 44 septies CGI",
+          "article_cgi": "Art. 44 septies CGI",
+          "description": "Exoneration 2 ans pour reprise d'etablissements industriels en difficulte."
+        },
+        "XS": {
+          "code": "XS",
+          "intitule": "Corse Art. 208 quater A CGI",
+          "article_cgi": "Art. 208 quater A CGI",
+          "description": "Exoneration pour investissements en Corse (regime historique)."
+        },
+        "XG": {
+          "code": "XG",
+          "intitule": "Zone franche Corse Art. 44 decies CGI",
+          "article_cgi": "Art. 44 decies CGI",
+          "description": "Exoneration zone franche en Corse (complementaire a XS)."
+        },
+        "XJ": {
+          "code": "XJ",
+          "intitule": "ZFU Art. 44 octies et octies A CGI",
+          "article_cgi": "Art. 44 octies A CGI",
+          "description": "Exoneration Zones Franches Urbaines (5 ans 100% + degression)."
+        },
+        "XL": {
+          "code": "XL",
+          "intitule": "Jeunes Entreprises Innovantes (JEI) Art. 44 sexies A CGI",
+          "article_cgi": "Art. 44 sexies-0 A + Art. 44 sexies A CGI",
+          "description": "Exoneration 100% sur 1er exercice beneficiaire + 50% sur le suivant.",
+          "conditions_jei": [
+            "PME au sens communautaire (< 250 salaries, CA < 50M ou bilan < 43M)",
+            "Creee depuis moins de 11 ans (etendu LFI 2024)",
+            "R&D >= 15% des charges deductibles",
+            "Detenue >= 50% par personnes physiques",
+            "Non issue d'une restructuration"
+          ]
+        },
+        "XO": {
+          "code": "XO",
+          "intitule": "Poles de competitivite Art. 44 undecies CGI",
+          "article_cgi": "Art. 44 undecies CGI",
+          "description": "Exoneration pour projets de R&D collaboratifs dans les poles de competitivite."
+        },
+        "XH": {
+          "code": "XH",
+          "intitule": "SIIC Art. 208 C CGI",
+          "article_cgi": "Art. 208 C CGI",
+          "description": "Regime des Societes d'Investissements Immobiliers Cotees. Exoneration sous condition de distribution."
+        }
+      }
+    },
+    "section_IV_resultat_final": {
+      "label": "Resultat fiscal final",
+      "lignes": {
+        "ZI": {
+          "code": "ZI",
+          "intitule": "Resultat fiscal avant imputation des deficits",
+          "sens": "CALCUL",
+          "calcul": "XR (Total I) - ZY (Total II)",
+          "description": "RF brut avant imputation des deficits anterieurs et report en arriere."
+        },
+        "ZL": {
+          "code": "ZL",
+          "intitule": "Deficit de l'exercice reporte en arriere (carry-back)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 220 quinquies CGI",
+          "description": "Option de report en arriere du deficit sur l'exercice precedent. Genere une creance sur le Tresor.",
+          "calcul": "min(deficit, 1 000 000 EUR, IS N-1 non restitue)",
+          "piege": "Option irrevocable. La creance est utilisable pour payer l'IS des 5 exercices suivants, puis remboursable."
+        },
+        "XI": {
+          "code": "XI",
+          "intitule": "Deficits anterieurs imputes (carry-forward)",
+          "sens": "-DEDUCTION",
+          "article_cgi": "Art. 209 I CGI",
+          "description": "Imputation des deficits des exercices anterieurs sur le benefice de l'exercice.",
+          "calcul": "min(deficits anterieurs disponibles, 1 000 000 + 50% x (ZI - 1 000 000))",
+          "regles": [
+            "Report en avant illimite dans le temps",
+            "Plafonnement : 1 M EUR + 50% du benefice excedant 1 M EUR",
+            "Imputation par ordre chronologique des deficits"
+          ],
+          "piege": "Le plafonnement a 1M + 50% ne s'applique qu'a la fraction du benefice superieure a 1M EUR. Sous 1M EUR, imputation totale possible."
+        },
+        "XN": {
+          "code": "XN",
+          "intitule": "Resultat fiscal - BENEFICE (montant positif)",
+          "sens": "FINAL",
+          "calcul": "max(ZI - ZL - XI, 0)",
+          "description": "Resultat fiscal positif servant de base au calcul de l'IS. C'est cette ligne qui alimente le calcul IS Art. 219."
+        },
+        "XO": {
+          "code": "XO",
+          "intitule": "Resultat fiscal - DEFICIT (montant positif representant un deficit)",
+          "sens": "FINAL",
+          "calcul": "abs(min(ZI - ZL - XI, 0))",
+          "description": "Deficit fiscal reportable en avant (Art. 209 I) ou en arriere (Art. 220 quinquies)."
+        }
+      }
+    }
+  },
+  "metadata": {
+    "total_lignes": 42,
+    "lignes_reintegration": 17,
+    "lignes_deduction": 15,
+    "lignes_regimes_speciaux": 8,
+    "lignes_resultat": 5,
+    "reintegrations_automatiques": ["WI", "WG", "WE", "WF"],
+    "lignes_critiques_controle": ["WI", "WG", "WV", "WN", "WM", "L8", "XI", "ZL"]
+  }
+}

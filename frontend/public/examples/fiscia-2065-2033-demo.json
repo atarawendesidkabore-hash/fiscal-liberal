@@ -1,0 +1,22 @@
+{
+  "siren": "732829320",
+  "denomination": "Cabinet Atlas Fiscal",
+  "exercice_ouvert": "2024-01-01",
+  "exercice_clos": "2024-12-31",
+  "regime_imposition": "reel_simplifie",
+  "ca_ht": 3500000,
+  "capital_social": 50000,
+  "effectif_moyen": 12,
+  "capital_pp": true,
+  "capital_libere": true,
+  "resultat_comptable": 245000,
+  "achats_marchandises": 510000,
+  "charges_externes": 265000,
+  "impots_taxes": 18000,
+  "salaires": 420000,
+  "charges_sociales": 160000,
+  "dotations_amortissements": 48000,
+  "reintegrations": 16300,
+  "deductions": 20400,
+  "deficits_anterieurs": 50000
+}

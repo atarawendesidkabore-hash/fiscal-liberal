@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fiscia
+      POSTGRES_PASSWORD: fiscia_pro_2024
+      POSTGRES_DB: fiscia
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fiscia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama_models:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/version || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://fiscia:fiscia_pro_2024@postgres:5432/fiscia
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=fiscia-fiscal-is-v3
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  ollama_models:

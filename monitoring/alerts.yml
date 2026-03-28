@@ -1,0 +1,102 @@
+groups:
+  - name: fiscia_pro_alerts
+    rules:
+      # --- Availability ---
+      - alert: FiscIADown
+        expr: up{job="fiscia-pro"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "FiscIA Pro backend is down"
+          description: "The FiscIA Pro backend has been unreachable for more than 1 minute."
+
+      # --- Error rate ---
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(fiscia_http_requests_total{status_code=~"5.."}[5m]))
+            /
+            sum(rate(fiscia_http_requests_total[5m]))
+          ) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate (> 5%)"
+          description: "More than 5% of HTTP requests are returning 5xx errors over the last 5 minutes."
+
+      - alert: CriticalErrorRate
+        expr: |
+          (
+            sum(rate(fiscia_http_requests_total{status_code=~"5.."}[5m]))
+            /
+            sum(rate(fiscia_http_requests_total[5m]))
+          ) > 0.15
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Critical error rate (> 15%)"
+          description: "More than 15% of HTTP requests are failing. Immediate investigation required."
+
+      # --- Latency ---
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(fiscia_http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 2.0
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "P95 latency exceeds 2 seconds"
+          description: "The 95th percentile request latency has been above 2s for 3 minutes."
+
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(fiscia_http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 5.0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "P99 latency exceeds 5 seconds"
+          description: "The 99th percentile request latency has exceeded 5s. Possible resource exhaustion."
+
+      # --- Database ---
+      - alert: DatabaseSlow
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(fiscia_db_query_duration_seconds_bucket[5m])) by (le)
+          ) > 0.5
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database queries are slow (P95 > 500ms)"
+          description: "Database query latency at the 95th percentile exceeds 500ms."
+
+      # --- Business metrics ---
+      - alert: NoCalculationsReceived
+        expr: |
+          sum(increase(fiscia_is_calculations_total[1h])) == 0
+          and
+          sum(increase(fiscia_http_requests_total[1h])) > 0
+        for: 2h
+        labels:
+          severity: info
+        annotations:
+          summary: "No IS calculations in the last 2 hours"
+          description: "The system is receiving traffic but no IS calculations have been performed. May indicate a frontend issue."
+
+      # --- Resource exhaustion ---
+      - alert: TooManyInFlightRequests
+        expr: sum(fiscia_http_requests_in_progress) > 50
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "More than 50 concurrent requests in progress"
+          description: "The backend may be overloaded. Consider scaling horizontally."

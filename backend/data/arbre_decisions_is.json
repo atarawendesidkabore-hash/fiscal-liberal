@@ -1,0 +1,608 @@
+{
+  "version": "3.0",
+  "title": "Arbre de decision - 25 cas extracomptables IS courants",
+  "reference": "ESG Finance IS 2025/2026 - DGFiP 2058-A",
+  "cas": [
+    {
+      "id": 1,
+      "intitule": "IS comptabilise en charges",
+      "categorie": "charges_non_deductibles",
+      "frequence": "systematique",
+      "question": "L'IS (compte 695) a-t-il ete comptabilise en charge dans le compte de resultat ?",
+      "reponse_oui": {
+        "action": "REINTEGRATION",
+        "ligne_2058a": "WI",
+        "article_cgi": "Art. 213 CGI",
+        "montant": "Totalite de l'IS comptabilise",
+        "justification": "L'IS n'est jamais deductible du resultat fiscal. Reintegration obligatoire et systematique.",
+        "automatique": true
+      },
+      "reponse_non": {
+        "action": "AUCUNE",
+        "commentaire": "Si l'IS est comptabilise directement au bilan (ce qui est rare), pas de reintegration necessaire."
+      }
+    },
+    {
+      "id": 2,
+      "intitule": "Amendes et penalites",
+      "categorie": "charges_non_deductibles",
+      "frequence": "systematique",
+      "question": "La societe a-t-elle comptabilise des amendes ou penalites (fiscales, penales, sociales) en charges ?",
+      "reponse_oui": {
+        "action": "REINTEGRATION",
+        "ligne_2058a": "WG",
+        "article_cgi": "Art. 39-2 CGI",
+        "montant": "Totalite des amendes et penalites",
+        "justification": "Toutes les sanctions pecuniaires sont non deductibles.",
+        "exception": "Les interets de retard Art. 1727 CGI (0.20%/mois) sont DEDUCTIBLES car consideres comme une indemnisation du Tresor, pas une sanction."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 3,
+      "intitule": "TVS (Taxe sur vehicules de societes)",
+      "categorie": "charges_non_deductibles",
+      "frequence": "systematique",
+      "question": "La societe a-t-elle comptabilise la TVS (ou taxes CO2/polluants depuis 2022) en charge ?",
+      "reponse_oui": {
+        "action": "REINTEGRATION",
+        "ligne_2058a": "WF",
+        "article_cgi": "Art. 39-1 CGI + Art. 1010 et s. CGI",
+        "montant": "Totalite de la TVS comptabilisee",
+        "automatique": true
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 4,
+      "intitule": "Charges somptuaires (chasse, yacht, residences)",
+      "categorie": "charges_non_deductibles",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle supporte des depenses de chasse, peche, yacht ou residences de plaisance ?",
+      "reponse_oui": {
+        "action": "REINTEGRATION",
+        "ligne_2058a": "WE",
+        "article_cgi": "Art. 39-4 CGI",
+        "montant": "Totalite des charges somptuaires (bien + entretien + personnel dedie)",
+        "exception": "Si la residence est affectee a l'accueil de clientele et inscrite a l'actif : deductible (charge de la preuve sur le contribuable)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 5,
+      "intitule": "Amortissement excessif vehicule tourisme",
+      "categorie": "amortissements",
+      "frequence": "frequent",
+      "question": "La societe possede-t-elle des vehicules de tourisme dont la valeur depasse le plafond fiscal ?",
+      "reponse_oui": {
+        "sous_questions": [
+          {
+            "question": "Le vehicule emet-il plus de 130g CO2/km ?",
+            "oui": { "plafond": 9900, "article": "Art. 39-4-a CGI" },
+            "non": {
+              "question": "Le vehicule est-il electrique ou hybride rechargeable ?",
+              "oui": { "plafond": 30000, "article": "Art. 39-4-a CGI (LFI 2024)" },
+              "non": { "plafond": 18300, "article": "Art. 39-4 CGI" }
+            }
+          }
+        ],
+        "action": "REINTEGRATION",
+        "ligne_2058a": "WD",
+        "calcul": "Amortissement comptabilise - (Plafond fiscal / duree amortissement) = excedent a reintegrer"
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 6,
+      "intitule": "Interets comptes courants d'associes",
+      "categorie": "interets",
+      "frequence": "frequent",
+      "question": "Des interets ont-ils ete verses sur les comptes courants d'associes ?",
+      "reponse_oui": {
+        "sous_questions": [
+          {
+            "question": "Le capital social est-il integralement libere ?",
+            "non": {
+              "action": "REINTEGRATION TOTALE",
+              "ligne_2058a": "WM",
+              "article_cgi": "Art. 39-1-3 CGI",
+              "montant": "Totalite des interets verses",
+              "justification": "Si capital non libere, AUCUN interet CC n'est deductible."
+            },
+            "oui": {
+              "question": "Le taux des interets depasse-t-il le TMP BdF ?",
+              "oui": {
+                "action": "REINTEGRATION PARTIELLE",
+                "ligne_2058a": "WM",
+                "article_cgi": "Art. 39-1-3 + Art. 212 CGI",
+                "calcul": "Interets verses - (Solde CC x TMP BdF) = excedent a reintegrer"
+              },
+              "non": {
+                "action": "AUCUNE",
+                "commentaire": "Interets dans les limites fiscales, entierement deductibles."
+              }
+            }
+          }
+        ]
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 7,
+      "intitule": "Dividendes recus d'une filiale (regime mere-filiale)",
+      "categorie": "mere_filiale",
+      "frequence": "frequent",
+      "question": "La societe a-t-elle recu des dividendes d'une filiale ?",
+      "reponse_oui": {
+        "checklist_art145": {
+          "condition_1": "Participation >= 5% du capital ?",
+          "condition_2": "Titres detenus >= 2 ans (ou engagement) ?",
+          "condition_3": "Titres nominatifs ?",
+          "condition_4": "Pleine propriete (non demembres) ?",
+          "condition_5": "Filiale soumise IS ?",
+          "condition_6": "Filiale hors ETNC ?"
+        },
+        "toutes_conditions_ok": {
+          "action_1": { "sens": "DEDUCTION", "ligne_2058a": "WV", "montant": "Dividende brut", "article_cgi": "Art. 145 + 216 CGI" },
+          "action_2": { "sens": "REINTEGRATION", "ligne_2058a": "WN", "montant": "(Dividende + CI) x 5%", "article_cgi": "Art. 216 CGI" },
+          "impact_net": "RF diminue de : Dividende - QP 5% = Dividende x 95%",
+          "integration_fiscale": "Si integration fiscale Art. 223 A+ : QP reduite a 1% au lieu de 5%"
+        },
+        "une_condition_manque": {
+          "action": "AUCUNE DEDUCTION",
+          "consequence": "Dividendes integralement imposables au taux IS (25% ou 15% PME)",
+          "alerte": "REGIME MERE-FILIALE INAPPLICABLE"
+        }
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 8,
+      "intitule": "Plus-value LT titres de participation",
+      "categorie": "plus_values",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle realise une plus-value sur cession de titres de participation detenus depuis plus de 2 ans ?",
+      "reponse_oui": {
+        "action_1": { "sens": "DEDUCTION", "ligne_2058a": "WR", "montant": "PV nette LT", "article_cgi": "Art. 219-I-a quater CGI", "taux": "0%" },
+        "action_2": { "sens": "REINTEGRATION", "ligne_2058a": "L8", "montant": "PV brute x 12%", "article_cgi": "Art. 219-I-a quater CGI" },
+        "piege": "La QP 12% se calcule sur la PV BRUTE (avant imputation des MV), pas sur la PV nette.",
+        "definition_titres_participation": "Titres qui permettent d'exercer une influence sur la societe emettrice et qui sont inscrits au compte 'Titres de participation' (sous-comptes 261/262/263)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 9,
+      "intitule": "Plus-value CT (cession d'immobilisation < 2 ans)",
+      "categorie": "plus_values",
+      "frequence": "frequent",
+      "question": "Une PV sur cession d'immobilisation detenue depuis moins de 2 ans a-t-elle ete degagee ?",
+      "reponse_oui": {
+        "action": "AUCUNE REINTEGRATION",
+        "commentaire": "Les PV CT sont imposables au taux normal IS (25%). Elles sont deja dans le resultat comptable. Aucun traitement extracomptable sauf si etalement applicable.",
+        "etalement_possible": {
+          "condition": "Sinistre ou expropriation uniquement (Art. 39 quaterdecies CGI)",
+          "si_oui": { "ligne_2058a": "WS", "sens": "DEDUCTION", "montant": "2/3 de la PV (etalee sur 3 ans)" }
+        }
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 10,
+      "intitule": "Moins-value LT titres de participation",
+      "categorie": "plus_values",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle subi une MV sur cession de titres de participation detenus > 2 ans ?",
+      "reponse_oui": {
+        "action": "NON DEDUCTIBLE",
+        "justification": "Symetrie avec l'exoneration des PV LT : si les PV sont a 0%, les MV ne sont pas deductibles.",
+        "article_cgi": "Art. 219-I-a quater CGI",
+        "ligne_2058a": "WK ou WN (selon comptabilisation)",
+        "piege": "La MV LT sur titres de participation n'est imputable QUE sur les PV LT de meme nature, sur 10 exercices."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 11,
+      "intitule": "Provisions pour risques et charges",
+      "categorie": "provisions",
+      "frequence": "frequent",
+      "question": "Des provisions pour risques et charges ont-elles ete dotees au cours de l'exercice ?",
+      "reponse_oui": {
+        "test_deductibilite": {
+          "condition_1": "La perte ou charge est-elle nettement precisee ?",
+          "condition_2": "Est-elle probable (pas simplement eventuelle) ?",
+          "condition_3": "Resulte-t-elle d'evenements en cours a la cloture ?",
+          "condition_4": "La charge correspondante est-elle deductible par nature ?"
+        },
+        "toutes_conditions_ok": {
+          "action": "AUCUNE REINTEGRATION",
+          "commentaire": "Provision deductible, reste en charge."
+        },
+        "une_condition_manque": {
+          "action": "REINTEGRATION",
+          "ligne_2058a": "WK",
+          "article_cgi": "Art. 39-1-5 CGI",
+          "montant": "Dotation non deductible"
+        },
+        "exemples_non_deductibles": [
+          "Provision pour propre assureur (sauf compagnie d'assurance)",
+          "Provision pour charges futures non nees (ex: entretien programme si pas d'obligation legale)",
+          "Provision pour impot (IS) — requalifiee en charge non deductible"
+        ]
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 12,
+      "intitule": "Cadeaux et frais de reception",
+      "categorie": "charges_non_deductibles",
+      "frequence": "frequent",
+      "question": "La societe a-t-elle distribue des cadeaux ou supporte des frais de reception ?",
+      "reponse_oui": {
+        "sous_questions": [
+          {
+            "question": "Les depenses sont-elles dans l'interet direct de l'entreprise (prospection, fidelisation) ?",
+            "oui": {
+              "action": "DEDUCTIBLE",
+              "commentaire": "Charge deductible si interet de l'entreprise et montant raisonnable."
+            },
+            "non": {
+              "action": "REINTEGRATION",
+              "ligne_2058a": "WC",
+              "article_cgi": "Art. 39-5 CGI",
+              "montant": "Montant des cadeaux sans interet professionnel"
+            }
+          }
+        ],
+        "obligation_declarative": "Releve detaille des frais generaux (Art. 54 quater CGI) si cadeaux > 3 000 EUR/an",
+        "piege": "La TVA sur les cadeaux > 73 EUR TTC n'est pas recuperable (Art. 206-IV-2 Annexe II CGI)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 13,
+      "intitule": "Jetons de presence",
+      "categorie": "charges_non_deductibles",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle verse des jetons de presence aux administrateurs ?",
+      "reponse_oui": {
+        "calcul_plafond": "5% x remuneration moyenne des 5 ou 10 salaries les mieux payes x nombre d'administrateurs",
+        "article_cgi": "Art. 210 sexies CGI",
+        "sous_plafond": {
+          "action": "DEDUCTIBLE",
+          "commentaire": "Charge deductible dans la limite du plafond."
+        },
+        "au_dessus_plafond": {
+          "action": "REINTEGRATION",
+          "ligne_2058a": "WN",
+          "montant": "Excedent au-dela du plafond Art. 210 sexies"
+        }
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 14,
+      "intitule": "Deficits anterieurs reportables en avant",
+      "categorie": "deficits",
+      "frequence": "frequent",
+      "question": "La societe dispose-t-elle de deficits anterieurs reportables ?",
+      "reponse_oui": {
+        "condition": "RF de l'exercice (ZI) doit etre positif pour imputer",
+        "action": "DEDUCTION",
+        "ligne_2058a": "XI",
+        "article_cgi": "Art. 209 I CGI",
+        "calcul": {
+          "si_zi_inf_1m": "Imputation totale possible (dans la limite du benefice)",
+          "si_zi_sup_1m": "Imputation = 1 000 000 + 50% x (ZI - 1 000 000)"
+        },
+        "regles": [
+          "Report en avant illimite dans le temps",
+          "Imputation par ordre chronologique",
+          "Plafonnement : 1M + 50% du benefice au-dela de 1M"
+        ]
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 15,
+      "intitule": "Report en arriere du deficit (carry-back)",
+      "categorie": "deficits",
+      "frequence": "occasionnel",
+      "question": "La societe souhaite-t-elle reporter en arriere le deficit de l'exercice ?",
+      "reponse_oui": {
+        "conditions": [
+          "Exercice deficitaire (XO > 0)",
+          "Benefice non distribue au titre de N-1 disponible",
+          "Option exercee dans le delai de depot de la declaration de resultat"
+        ],
+        "action": "DEDUCTION",
+        "ligne_2058a": "ZL",
+        "article_cgi": "Art. 220 quinquies CGI",
+        "calcul": "min(deficit, benefice N-1 non distribue, 1 000 000 EUR)",
+        "resultat": "Creance sur le Tresor = deficit impute x taux IS de N-1",
+        "utilisation_creance": "Imputation sur IS des 5 exercices suivants, puis remboursement cash",
+        "piege": "Option IRREVOCABLE. Le deficit reporte en arriere ne peut plus etre reporte en avant."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 16,
+      "intitule": "Ecarts de conversion actif (pertes de change latentes)",
+      "categorie": "ecarts_change",
+      "frequence": "frequent",
+      "question": "Des creances ou dettes en devises ont-elles genere des ecarts de conversion actif (pertes latentes) ?",
+      "reponse_oui": {
+        "action": "AUCUNE REINTEGRATION",
+        "commentaire": "Les pertes de change latentes (ecarts de conversion actif) sont deductibles si provisionnees (Art. 39-1-5 CGI). La provision pour perte de change est obligatoire comptablement et deductible fiscalement.",
+        "piege": "En revanche, les GAINS de change latents (ecarts de conversion passif) doivent etre reintegres s'ils ne sont pas comptabilises en produit.",
+        "gains_latents": {
+          "action": "REINTEGRATION",
+          "ligne_2058a": "WN",
+          "article_cgi": "Art. 38-4 CGI"
+        }
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 17,
+      "intitule": "Fusion / Apport partiel d'actif (regime de faveur)",
+      "categorie": "restructurations",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle realise une operation de restructuration sous le regime de faveur Art. 210 A ?",
+      "reponse_oui": {
+        "action": "DEDUCTION",
+        "ligne_2058a": "WT",
+        "article_cgi": "Art. 210 A CGI",
+        "montant": "PV en sursis d'imposition",
+        "engagements_absorbante": [
+          "Reprendre a son bilan les elements apportes pour leur valeur fiscale",
+          "Calculer les PV ulterieures par rapport a ces valeurs fiscales",
+          "Reintegrer les provisions devenues sans objet",
+          "Respecter le rapport d'echange convenu"
+        ],
+        "piege": "Non-respect des engagements = decheance retroactive du regime + imposition immediate de TOUTES les PV en sursis + interets de retard."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 18,
+      "intitule": "Integration fiscale (groupe Art. 223 A+)",
+      "categorie": "groupes",
+      "frequence": "occasionnel",
+      "question": "La societe est-elle tete de groupe en integration fiscale ?",
+      "reponse_oui": {
+        "seuil_detention": ">= 95% du capital de chaque filiale integree",
+        "avantages": [
+          "Compensation immediate benefices / deficits du groupe",
+          "QP dividendes intragroupe : 1% (vs 5% regime normal)",
+          "Elimination des operations intragroupe (provisions, PV/MV)"
+        ],
+        "article_cgi": "Art. 223 A et s. CGI",
+        "impact_2058a": "Chaque societe etablit sa propre 2058-A, la tete de groupe calcule le RF consolide",
+        "piege": "Sortie d'une filiale du perimetre = reintegration des avantages anterieurs (provisions intragroupe, PV en sursis)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 19,
+      "intitule": "Credit d'impot recherche (CIR)",
+      "categorie": "credits_impot",
+      "frequence": "frequent",
+      "question": "La societe a-t-elle engage des depenses de R&D eligibles au CIR ?",
+      "reponse_oui": {
+        "action": "AUCUNE action 2058-A directe",
+        "commentaire": "Le CIR ne passe pas par la 2058-A mais par le formulaire 2069-A-SD. Il s'impute directement sur l'IS du (formulaire 2572).",
+        "article_cgi": "Art. 244 quater B CGI",
+        "taux": "30% des depenses R&D < 100M EUR, 5% au-dela",
+        "piege": "Les subventions publiques pour R&D doivent etre deduites de l'assiette du CIR. Risque de redressement important si ommission."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 20,
+      "intitule": "Participations dans societes de personnes (SNC, SCI...)",
+      "categorie": "societes_personnes",
+      "frequence": "occasionnel",
+      "question": "La societe IS detient-elle des parts dans une societe de personnes (SNC, SCI, SCS) soumise a l'IR ?",
+      "reponse_oui": {
+        "benefice_sdp": {
+          "action": "REINTEGRATION",
+          "ligne_2058a": "WL",
+          "article_cgi": "Art. 8 + Art. 238 bis L CGI",
+          "montant": "QP benefice proportionnelle a la detention",
+          "piege": "Imposable meme si non distribue (transparence fiscale)."
+        },
+        "deficit_sdp": {
+          "action": "REINTEGRATION (si comptabilise en charge)",
+          "ligne_2058a": "K7",
+          "article_cgi": "Art. 8 CGI",
+          "montant": "QP perte a reintegrer si elle a ete comptabilisee en charge",
+          "commentaire": "Le deficit de la SDP est imputable au niveau de la societe IS associee (pas de reintegration si correctement traite). K7 sert a corriger si la perte a ete comptabilisee en diminution du resultat."
+        }
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 21,
+      "intitule": "Abandons de creances",
+      "categorie": "operations_intragroupe",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle consenti ou recu un abandon de creance ?",
+      "reponse_oui": {
+        "abandon_commercial": {
+          "pour_celui_qui_consent": "Charge deductible si interet de l'exploitation (maintien d'un fournisseur/client cle)",
+          "pour_celui_qui_recoit": "Produit imposable"
+        },
+        "abandon_financier": {
+          "pour_celui_qui_consent": {
+            "clause_retour": "Partie avec clause de retour a meilleure fortune : non deductible immediatement (actif conditionnel)",
+            "sans_clause": "Deductible a hauteur de la situation nette negative de la filiale (Art. 39-13 CGI)"
+          },
+          "pour_celui_qui_recoit": "Produit imposable (sauf regime de groupe)"
+        },
+        "article_cgi": "Art. 39-13 CGI + Art. 216 A CGI",
+        "piege": "Art. 39-13 : deductibilite limitee a la situation nette negative. L'excedent est non deductible."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 22,
+      "intitule": "Remunerations excessives des dirigeants",
+      "categorie": "charges_non_deductibles",
+      "frequence": "occasionnel",
+      "question": "Les remunerations des dirigeants sont-elles manifestement excessives par rapport aux fonctions exercees ?",
+      "reponse_oui": {
+        "action": "REINTEGRATION PARTIELLE",
+        "ligne_2058a": "WC",
+        "article_cgi": "Art. 39-1-1 CGI (acte anormal de gestion)",
+        "montant": "Fraction excessive de la remuneration (difference entre montant verse et montant normal pour des fonctions equivalentes)",
+        "criteres_excessivite": [
+          "Taille et chiffre d'affaires de l'entreprise",
+          "Nature et importance des fonctions exercees",
+          "Remunerations comparables dans le secteur",
+          "Resultat de l'entreprise"
+        ],
+        "piege": "Requalification possible en revenus distribues (Art. 111-d CGI) = double imposition (IS + IR pour le dirigeant)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 23,
+      "intitule": "Exoneration JEI (Jeune Entreprise Innovante)",
+      "categorie": "regimes_speciaux",
+      "frequence": "occasionnel",
+      "question": "La societe remplit-elle les conditions du statut JEI ?",
+      "reponse_oui": {
+        "conditions": [
+          "PME communautaire (< 250 salaries, CA < 50M ou bilan < 43M)",
+          "Creee depuis moins de 11 ans (LFI 2024 : extension de 8 a 11 ans)",
+          "Depenses R&D >= 15% des charges fiscalement deductibles",
+          "Detenue >= 50% par personnes physiques (ou JEI, FCPR, SCR, associations de recherche)",
+          "Non issue d'une restructuration (concentration, extension, reprise)"
+        ],
+        "exoneration": {
+          "exercice_1": "100% du benefice exonere",
+          "exercice_2": "50% du benefice exonere"
+        },
+        "ligne_2058a": "XL",
+        "article_cgi": "Art. 44 sexies-0 A + Art. 44 sexies A CGI",
+        "piege": "Le statut JEI doit etre certifie. Exoneration plafonnee par les regles de minimis UE (300 000 EUR sur 3 ans)."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 24,
+      "intitule": "Concessions de brevets et licences (taux reduit 15%)",
+      "categorie": "plus_values",
+      "frequence": "occasionnel",
+      "question": "La societe a-t-elle percu des redevances de concession de brevets ou des PV sur cession de brevets ?",
+      "reponse_oui": {
+        "conditions_taux_reduit": [
+          "Brevet invente ou acquis depuis >= 2 ans",
+          "Pas de lien de dependance entre concedant et concessionnaire",
+          "Le brevet est exploite effectivement"
+        ],
+        "action": "DEDUCTION",
+        "ligne_2058a": "L2",
+        "article_cgi": "Art. 39 terdecies CGI",
+        "taux_special": "15% (au lieu de 25%)",
+        "piege": "Depuis la reforme Pilier 2 OCDE et la transposition IP Box : le taux reduit peut etre remis en cause si la societe n'a pas realise elle-meme la R&D (nexus approach). Verifier avec Art. 238 CGI."
+      },
+      "reponse_non": {
+        "action": "AUCUNE"
+      }
+    },
+    {
+      "id": 25,
+      "intitule": "Determination du taux IS applicable (PME vs taux normal)",
+      "categorie": "calcul_is",
+      "frequence": "systematique",
+      "question": "La societe est-elle eligible au taux reduit PME 15% ?",
+      "reponse_oui": {
+        "conditions_cumulatives": [
+          "CA HT < 10 000 000 EUR",
+          "Capital integralement libere",
+          "Capital detenu a >= 75% par des personnes physiques (ou par des societes elles-memes detenues >= 75% PP)"
+        ],
+        "calcul": {
+          "tranche_15pct": "min(RF, 42 500) x 15% = [montant]",
+          "tranche_25pct": "max(RF - 42 500, 0) x 25% = [montant]",
+          "is_total": "Somme des deux tranches"
+        },
+        "article_cgi": "Art. 219-I-b CGI",
+        "piege": "Proratiser le seuil de 42 500 EUR si l'exercice est != 12 mois."
+      },
+      "reponse_non": {
+        "calcul": "RF x 25%",
+        "article_cgi": "Art. 219-I CGI",
+        "complement": "Si IS > 763 000 EUR : contribution sociale (CSB) = 3.3% x (IS - 763 000 EUR)"
+      }
+    }
+  ],
+  "metadata": {
+    "total_cas": 25,
+    "categories": {
+      "charges_non_deductibles": [1, 2, 3, 4, 12, 13, 22],
+      "amortissements": [5],
+      "interets": [6],
+      "mere_filiale": [7],
+      "plus_values": [8, 9, 10, 24],
+      "provisions": [11],
+      "deficits": [14, 15],
+      "ecarts_change": [16],
+      "restructurations": [17],
+      "groupes": [18],
+      "credits_impot": [19],
+      "societes_personnes": [20],
+      "operations_intragroupe": [21],
+      "regimes_speciaux": [23],
+      "calcul_is": [25]
+    },
+    "reintegrations_systematiques": [1, 2, 3, 4],
+    "cas_les_plus_frequents": [1, 2, 3, 5, 6, 7, 11, 12, 14, 19, 25]
+  }
+}

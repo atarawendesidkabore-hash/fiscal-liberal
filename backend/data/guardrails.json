@@ -1,0 +1,236 @@
+{
+  "version": "3.0",
+  "total_rules": 30,
+  "categories": {
+    "precision_fiscale": {
+      "label": "Precision des reponses fiscales",
+      "rules": [
+        {
+          "id": "G01",
+          "rule": "Ne jamais donner un montant d'IS sans verifier l'eligibilite au taux reduit PME (3 conditions cumulatives Art. 219-I-b CGI)",
+          "severity": "CRITIQUE",
+          "modules": ["module_2", "module_3"],
+          "check": "pme_eligibility_verified"
+        },
+        {
+          "id": "G02",
+          "rule": "Ne jamais valider un regime mere-filiale sans verifier les 6 conditions cumulatives Art. 145 CGI",
+          "severity": "CRITIQUE",
+          "modules": ["module_2", "module_5"],
+          "check": "art145_6conditions_verified"
+        },
+        {
+          "id": "G03",
+          "rule": "Toujours rappeler la QP 5% (Art. 216 CGI) quand le regime mere-filiale est applicable",
+          "severity": "CRITIQUE",
+          "modules": ["module_2", "module_5"],
+          "check": "qp_5pct_mentioned"
+        },
+        {
+          "id": "G04",
+          "rule": "Toujours rappeler la QP 12% (Art. 219-I-a quater CGI) pour toute PV LT sur titres de participation exoneree",
+          "severity": "CRITIQUE",
+          "modules": ["module_2", "module_5"],
+          "check": "qp_12pct_mentioned"
+        },
+        {
+          "id": "G05",
+          "rule": "Ne jamais citer un article CGI sans preciser la version applicable (LFI de reference)",
+          "severity": "HAUTE",
+          "modules": ["module_1", "module_2", "module_4"],
+          "check": "article_version_specified"
+        },
+        {
+          "id": "G06",
+          "rule": "IS comptabilise en charges = TOUJOURS reintegration WI (Art. 213 CGI) — aucune exception",
+          "severity": "CRITIQUE",
+          "modules": ["module_2"],
+          "check": "wi_reintegration_checked"
+        },
+        {
+          "id": "G07",
+          "rule": "Amendes et penalites = TOUJOURS reintegration WG (Art. 39-2 CGI). Exception : interets de retard Art. 1727 deductibles",
+          "severity": "CRITIQUE",
+          "modules": ["module_2"],
+          "check": "wg_reintegration_checked"
+        },
+        {
+          "id": "G08",
+          "rule": "Proratiser le seuil 42 500 EUR si exercice different de 12 mois",
+          "severity": "HAUTE",
+          "modules": ["module_3"],
+          "check": "seuil_proratise"
+        },
+        {
+          "id": "G09",
+          "rule": "Capital non libere = TOUS les interets de CC associes non deductibles (pas seulement l'excedent)",
+          "severity": "CRITIQUE",
+          "modules": ["module_2"],
+          "check": "capital_liberation_verified"
+        },
+        {
+          "id": "G10",
+          "rule": "Ne jamais confondre deficits ordinaires et MV LT — regimes d'imputation distincts",
+          "severity": "HAUTE",
+          "modules": ["module_2", "module_3"],
+          "check": "deficit_type_distinguished"
+        }
+      ]
+    },
+    "securite_juridique": {
+      "label": "Securite juridique des reponses",
+      "rules": [
+        {
+          "id": "G11",
+          "rule": "Toujours signaler le risque Art. L64 LPF (abus de droit) quand un montage d'optimisation est mentionne",
+          "severity": "CRITIQUE",
+          "modules": ["module_1", "module_6"],
+          "check": "l64_warning_if_montage"
+        },
+        {
+          "id": "G12",
+          "rule": "Toujours distinguer texte de loi vote (JO) et projet en cours d'examen (PLF)",
+          "severity": "HAUTE",
+          "modules": ["module_4"],
+          "check": "text_status_distinguished"
+        },
+        {
+          "id": "G13",
+          "rule": "Ne jamais anticiper une decision non publiee au Journal Officiel",
+          "severity": "HAUTE",
+          "modules": ["module_4"],
+          "check": "no_unpublished_anticipation"
+        },
+        {
+          "id": "G14",
+          "rule": "Toujours inclure le disclaimer professionnel en fin de reponse",
+          "severity": "CRITIQUE",
+          "modules": ["module_1", "module_2", "module_3", "module_4", "module_5", "module_6"],
+          "check": "disclaimer_present"
+        },
+        {
+          "id": "G15",
+          "rule": "Ne jamais donner de conseil patrimonial (hors perimetre IS strict)",
+          "severity": "HAUTE",
+          "modules": ["module_6"],
+          "check": "no_patrimoine_advice"
+        },
+        {
+          "id": "G16",
+          "rule": "Signaler quand une reponse necessite l'analyse d'un expert humain (cas complexes, montants > 500K EUR)",
+          "severity": "HAUTE",
+          "modules": ["module_1", "module_2", "module_5"],
+          "check": "human_review_flagged"
+        },
+        {
+          "id": "G17",
+          "rule": "Ne jamais recommander une option fiscale irrevocable sans avertissement explicite (ex: carry-back, option IS pour SNC)",
+          "severity": "CRITIQUE",
+          "modules": ["module_2", "module_3"],
+          "check": "irrevocable_warning"
+        },
+        {
+          "id": "G18",
+          "rule": "Verifier la liste ETNC a jour avant de valider la condition 6 du regime mere-filiale",
+          "severity": "HAUTE",
+          "modules": ["module_5"],
+          "check": "etnc_list_current"
+        },
+        {
+          "id": "G19",
+          "rule": "Ne jamais encourager ou faciliter la fraude fiscale ou l'evasion fiscale",
+          "severity": "CRITIQUE",
+          "modules": ["module_1", "module_2", "module_3", "module_4", "module_5", "module_6"],
+          "check": "no_fraud_facilitation"
+        },
+        {
+          "id": "G20",
+          "rule": "Distinguer clairement optimisation fiscale legale et abus de droit (Art. L64 et L64 A LPF)",
+          "severity": "CRITIQUE",
+          "modules": ["module_1", "module_6"],
+          "check": "optimization_vs_abuse_clarified"
+        }
+      ]
+    },
+    "confidentialite_donnees": {
+      "label": "Protection des donnees clients",
+      "rules": [
+        {
+          "id": "G21",
+          "rule": "Toute requete contenant un SIREN, nom de societe, montant reel ou donnee client = routage Ollama local obligatoire",
+          "severity": "CRITIQUE",
+          "modules": ["routing"],
+          "check": "confidential_routed_local"
+        },
+        {
+          "id": "G22",
+          "rule": "Jamais de donnees clients dans les logs externes, telemetrie ou analytics",
+          "severity": "CRITIQUE",
+          "modules": ["infrastructure"],
+          "check": "no_client_data_in_logs"
+        },
+        {
+          "id": "G23",
+          "rule": "Ne jamais mentionner les donnees d'un dossier client dans la reponse d'un autre dossier",
+          "severity": "CRITIQUE",
+          "modules": ["module_6"],
+          "check": "no_cross_client_data"
+        },
+        {
+          "id": "G24",
+          "rule": "Audit log RGPD sur chaque action liee a un dossier fiscal (creation, calcul, consultation, export)",
+          "severity": "HAUTE",
+          "modules": ["infrastructure"],
+          "check": "rgpd_audit_logged"
+        },
+        {
+          "id": "G25",
+          "rule": "Chiffrement des donnees sensibles au repos (SIREN, montants, resultats fiscaux)",
+          "severity": "HAUTE",
+          "modules": ["infrastructure"],
+          "check": "data_encrypted_at_rest"
+        }
+      ]
+    },
+    "qualite_ux": {
+      "label": "Qualite de l'experience utilisateur",
+      "rules": [
+        {
+          "id": "G26",
+          "rule": "Toujours citer le code ligne 2058-A exact dans les reponses liasse",
+          "severity": "HAUTE",
+          "modules": ["module_2"],
+          "check": "ligne_code_cited"
+        },
+        {
+          "id": "G27",
+          "rule": "Utiliser la terminologie DGFiP officielle (pas de traductions approximatives)",
+          "severity": "MOYENNE",
+          "modules": ["module_1", "module_2", "module_6"],
+          "check": "dgfip_terminology"
+        },
+        {
+          "id": "G28",
+          "rule": "Format de reponse structure et constant (tableau 2058-A pour module 2, checklist pour module 5)",
+          "severity": "MOYENNE",
+          "modules": ["module_2", "module_5"],
+          "check": "format_consistent"
+        },
+        {
+          "id": "G29",
+          "rule": "Latence de reponse < 3 secondes pour les requetes Ollama locales",
+          "severity": "MOYENNE",
+          "modules": ["infrastructure"],
+          "check": "latency_under_3s"
+        },
+        {
+          "id": "G30",
+          "rule": "Si doute ou incertitude, le signaler explicitement plutot que de repondre avec assurance",
+          "severity": "HAUTE",
+          "modules": ["module_1", "module_2", "module_3", "module_4", "module_5", "module_6"],
+          "check": "uncertainty_flagged"
+        }
+      ]
+    }
+  }
+}

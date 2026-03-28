@@ -1,0 +1,32 @@
+[
+  {
+    "article": "Art. 209 I CGI",
+    "title": "Territorialite de l'imposition",
+    "text": "Les benefices passibles de l'impot sur les societes sont determines en tenant compte uniquement des benefices realises dans les entreprises exploitees en France, ainsi que de ceux dont l'imposition est attribuee a la France par une convention internationale. Trois criteres alternatifs : etablissement autonome, representant en France, cycle commercial complet realise en France. Les pertes d'etablissements etrangers autonomes ne sont pas deductibles en France.",
+    "version": "LFI 2024"
+  },
+  {
+    "article": "Art. 219 I CGI",
+    "title": "Taux normal de l'impot sur les societes",
+    "text": "Le taux normal de l'impot sur les societes est fixe a 25% pour l'ensemble du benefice imposable. Ce taux s'applique a toutes les entreprises soumises a l'IS qui ne remplissent pas les conditions du taux reduit PME prevu a l'article 219-I-b.",
+    "version": "LFI 2024"
+  },
+  {
+    "article": "Art. 219 I-b CGI",
+    "title": "Taux reduit PME",
+    "text": "Les redevables ayant realise un chiffre d'affaires hors taxes inferieur a 10 000 000 EUR au cours de l'exercice, et dont le capital est entierement libere et detenu de maniere continue pour 75% au moins par des personnes physiques, beneficient d'un taux reduit de 15% sur la fraction du benefice imposable n'excedant pas 42 500 EUR par periode de douze mois. Au-dela de ce seuil, le taux normal de 25% s'applique.",
+    "version": "LFI 2024"
+  },
+  {
+    "article": "Art. 145 CGI",
+    "title": "Regime des societes meres et filiales",
+    "text": "Le regime fiscal des societes meres prevu aux articles 145 et 216 du CGI permet l'exoneration quasi-totale des dividendes recus par une societe mere de sa filiale. Six conditions cumulatives : participation superieure ou egale a 5% du capital social, detention depuis au moins 2 ans ou engagement de conservation, titres nominatifs, pleine propriete, filiale soumise a l'IS, filiale non etablie dans un Etat ou territoire non cooperatif (ETNC). La quote-part de frais et charges de 5% est reintegree au resultat imposable.",
+    "version": "LFI 2024"
+  },
+  {
+    "article": "Art. 39-2 CGI",
+    "title": "Non-deductibilite des amendes et penalites",
+    "text": "Les amendes, confiscations, penalites de toute nature mises a la charge des contrevenants a des obligations legales ne sont pas admises en deduction des benefices soumis a l'impot. Sont visees les amendes fiscales (majorations, penalites DGFiP), penales (contraventions, delits), sociales (URSSAF) et administratives. Exception : les interets de retard de l'article 1727 CGI (0.20% par mois) sont deductibles car ils constituent une indemnisation du Tresor et non une sanction.",
+    "version": "LFI 2024"
+  }
+]

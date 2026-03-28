@@ -1,2 +1,0 @@
-"""FiscIA Pro backend package."""
-
