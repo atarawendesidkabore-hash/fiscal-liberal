@@ -2,6 +2,7 @@
 FiscIA Pro - FastAPI service.
 """
 import logging
+import os
 from decimal import Decimal
 from typing import Optional
 
@@ -66,11 +67,24 @@ LOCAL_CORS_ORIGINS = [
     "http://localhost:3101",
     "http://127.0.0.1:3101",
 ]
+EXTRA_CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("CORS_EXTRA_ORIGINS", "").split(",")
+    if origin.strip()
+]
+DEFAULT_TUNNEL_ORIGIN_REGEX = (
+    r"^https://([a-z0-9-]+\.)?(loca\.lt|localtunnel\.me|ngrok-free\.app|ngrok\.io)$"
+)
+ALLOW_ORIGIN_REGEX = os.environ.get(
+    "CORS_ALLOW_ORIGIN_REGEX",
+    DEFAULT_TUNNEL_ORIGIN_REGEX,
+)
 
 app = FastAPI(title="FiscIA Pro - API", version="3.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=LOCAL_CORS_ORIGINS,
+    allow_origins=[*LOCAL_CORS_ORIGINS, *EXTRA_CORS_ORIGINS],
+    allow_origin_regex=ALLOW_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
