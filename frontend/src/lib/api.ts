@@ -20,8 +20,8 @@ async function apiFetch<T>(path: string, opts: FetchOptions = {}): Promise<T> {
   } catch (error) {
     const message =
       error instanceof Error && error.message
-        ? `Impossible de contacter l'API locale (${API_BASE}).`
-        : "Impossible de contacter l'API locale.";
+        ? `Impossible de contacter l'API (${API_BASE}).`
+        : "Impossible de contacter l'API.";
     throw new ApiError(0, message);
   }
 

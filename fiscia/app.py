@@ -73,7 +73,7 @@ EXTRA_CORS_ORIGINS = [
     if origin.strip()
 ]
 DEFAULT_TUNNEL_ORIGIN_REGEX = (
-    r"^https://([a-z0-9-]+\.)?(loca\.lt|localtunnel\.me|ngrok-free\.app|ngrok\.io)$"
+    r"^https://([a-z0-9-]+\.)?(loca\.lt|localtunnel\.me|ngrok-free\.app|ngrok\.io|onrender\.com)$"
 )
 ALLOW_ORIGIN_REGEX = os.environ.get(
     "CORS_ALLOW_ORIGIN_REGEX",

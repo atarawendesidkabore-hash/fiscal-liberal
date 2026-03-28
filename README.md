@@ -65,6 +65,16 @@ docker compose up -d
 # Ollama stays local — never expose port 11434 externally
 ```
 
+## Deployment
+
+Render blueprint config is included in [render.yaml](C:/Users/eu/OneDrive/Desktop/fiscia-pro/fiscal-liberal/render.yaml).
+
+Deployment notes:
+
+- [Render deployment guide](docs/render-deploy.md)
+- public hosting needs three services: marketing site, app, and API
+- AI endpoints require a reachable Ollama host in production
+
 ## Tests
 
 ```bash
